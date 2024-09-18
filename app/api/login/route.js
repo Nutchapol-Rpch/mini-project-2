@@ -22,7 +22,7 @@ export async function POST(request) {
 
     // Here you would typically create and return a JWT token
     // For simplicity, we're just returning a success message
-    return NextResponse.json({ message: 'Login successful' }, { status: 200 });
+    return NextResponse.json({ message: 'Login successful', user: { name: user.username, email: user.email } }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from 'next/link';
 import { FaPlus, FaSearch } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
 
 async function getFlashcardSets() {
   const res = await fetch('http://localhost:3000/api/flashcard-sets', { cache: 'no-store' });
@@ -9,14 +12,36 @@ async function getFlashcardSets() {
   return res.json();
 }
 
-export default async function Home() {
-  const flashcardSets = await getFlashcardSets();
+export default function Home() {
+  const [flashcardSets, setFlashcardSets] = useState([]);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getFlashcardSets();
+        setFlashcardSets(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <header className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Welcome to FlashLearn</h1>
-        <p className="text-xl text-gray-600">Create, study, and master your flashcards</p>
+      <header className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-bold mb-4">Welcome to FlashLearn</h1>
+          <p className="text-xl text-gray-600">Create, study, and master your flashcards</p>
+        </div>
+        {user && <div className="text-xl">Hello, {user.name}</div>}
       </header>
 
       <div className="flex justify-between items-center mb-6">

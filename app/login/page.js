@@ -1,10 +1,41 @@
-import Link from 'next/link';
+"use client";
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Update import to use next/navigation
+import Link from 'next/link';
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        // Store user data (e.g., in context or local storage)
+        localStorage.setItem('user', JSON.stringify(data.user));
+        router.push('/');
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Login failed');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Login</h1>
-      <form className="max-w-md mx-auto">
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto">
         <div className="mb-4">
           <label htmlFor="email" className="block mb-2">Email</label>
           <input
@@ -12,6 +43,8 @@ export default function Login() {
             id="email"
             className="w-full px-3 py-2 border rounded-lg"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="mb-4">
@@ -21,6 +54,8 @@ export default function Login() {
             id="password"
             className="w-full px-3 py-2 border rounded-lg"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
