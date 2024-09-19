@@ -38,7 +38,7 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8">
       <header className="mb-8 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl font-bold mb-4">Welcome to FlashLearn</h1>
+          <h1 className="text-4xl font-bold mb-4">Welcome to Budzdy</h1>
           <p className="text-xl text-gray-600">Create, study, and master your flashcards</p>
         </div>
         {user && <div className="text-xl">Hello, {user.name}</div>}

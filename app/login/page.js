@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'; // Update import to use next/navigation
 import Link from 'next/link';
+import { useUser } from '../context/UserContext';
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const { setUser } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,8 +22,8 @@ export default function Login() {
       });
       if (response.ok) {
         const data = await response.json();
-        // Store user data (e.g., in context or local storage)
         localStorage.setItem('user', JSON.stringify(data.user));
+        setUser(data.user); // Update user context
         router.push('/');
       } else {
         const data = await response.json();

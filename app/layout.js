@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
           <nav className="bg-blue-500 text-white p-4">
             <div className="container mx-auto flex justify-between items-center">
-              <Link href="/" className="text-2xl font-bold">FlashLearn</Link>
+              <Link href="/" className="text-2xl font-bold">Budzdy</Link>
               <UserNav />
             </div>
           </nav>
