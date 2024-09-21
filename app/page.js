@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 
-async function getFlashcardSets() {
-  const res = await fetch('http://localhost:3000/api/flashcard-sets', { cache: 'no-store' });
+async function getFlashcardSets(userId) {
+  const res = await fetch(`http://localhost:3000/api/flashcard-sets?userId=${userId}`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch flashcard sets');
   }
@@ -18,20 +18,27 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const data = await getFlashcardSets();
-        setFlashcardSets(data);
-      } catch (error) {
-        console.error(error);
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        try {
+          const data = await getFlashcardSets(parsedUser._id);
+          setFlashcardSets(data);
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        try {
+          const data = await getFlashcardSets();
+          setFlashcardSets(data);
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
 
     fetchData();
-
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
   }, []);
 
   return (

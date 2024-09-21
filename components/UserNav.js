@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function UserNav() {
-  const { user, setUser } = useUser(); // This should work now
+  const { user, setUser } = useUser();
   const router = useRouter();
 
   const handleLogout = () => {
