@@ -19,7 +19,16 @@ export async function GET(request) {
 export async function POST(request) {
   await dbConnect();
   const data = await request.json();
+  console.log('Received data:', data);  // Keep this line for debugging
+  if (!data.createdBy) {
+    return NextResponse.json({ error: 'createdBy field is required' }, { status: 400 });
+  }
   const newFlashcardSet = new FlashcardSet(data);
-  await newFlashcardSet.save();
-  return NextResponse.json(newFlashcardSet, { status: 201 });
+  try {
+    const savedSet = await newFlashcardSet.save();
+    return NextResponse.json(savedSet, { status: 201 });
+  } catch (error) {
+    console.error('Error creating flashcard set:', error);
+    return NextResponse.json({ error: error.message || 'Failed to create flashcard set' }, { status: 500 });
+  }
 }
