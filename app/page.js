@@ -16,6 +16,7 @@ export default function Home() {
   const [flashcardSets, setFlashcardSets] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +45,11 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const filteredFlashcardSets = flashcardSets.filter((set) =>
+    set.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    set.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="mb-8 flex justify-between items-center">
@@ -68,6 +74,8 @@ export default function Home() {
             type="text"
             placeholder="Search your sets"
             className="w-full pl-10 pr-4 py-2 border rounded-lg"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         </div>
@@ -77,9 +85,9 @@ export default function Home() {
         <div className="text-center py-8">
           <p className="text-xl">Loading flashcard sets...</p>
         </div>
-      ) : flashcardSets.length > 0 ? (
+      ) : filteredFlashcardSets.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {flashcardSets.map((set) => (
+          {filteredFlashcardSets.map((set) => (
             <Link key={set._id} href={`/flashcard-set/${set._id}`}>
               <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
                 <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
