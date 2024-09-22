@@ -15,9 +15,11 @@ async function getFlashcardSets(userId) {
 export default function Home() {
   const [flashcardSets, setFlashcardSets] = useState([]);
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
@@ -36,6 +38,7 @@ export default function Home() {
           console.error(error);
         }
       }
+      setIsLoading(false);
     };
 
     fetchData();
@@ -70,20 +73,30 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {flashcardSets.map((set) => (
-          <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-            <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
-              <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-              <p className="text-gray-600 mb-4">{set.description}</p>
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <span>{set.cards.length} cards</span>
-                <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+      {isLoading ? (
+        <div className="text-center py-8">
+          <p className="text-xl">Loading flashcard sets...</p>
+        </div>
+      ) : flashcardSets.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {flashcardSets.map((set) => (
+            <Link key={set._id} href={`/flashcard-set/${set._id}`}>
+              <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+                <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
+                <p className="text-gray-600 mb-4">{set.description}</p>
+                <div className="flex justify-between items-center text-sm text-gray-500">
+                  <span>{set.cards.length} cards</span>
+                  <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <p className="text-xl">No flashcard sets found. Create your first set!</p>
+        </div>
+      )}
     </div>
   );
 }
