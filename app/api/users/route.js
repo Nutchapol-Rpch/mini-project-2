@@ -81,3 +81,26 @@ export async function PATCH(request) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }
+
+// Fetch user profile by email
+export async function GET(request) {
+  await dbConnect();
+  const { searchParams } = new URL(request.url);
+  const email = searchParams.get('email');
+
+  if (!email) {
+    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ user: { _id: user._id, name: user.username, email: user.email } }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
+  }
+}

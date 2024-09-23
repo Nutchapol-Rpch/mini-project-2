@@ -26,15 +26,23 @@ export default function Home() {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         try {
-          const data = await getFlashcardSets(parsedUser._id);
-          setFlashcardSets(data);
+          const response = await fetch(`/api/users?email=${parsedUser.email}`);
+          if (response.ok) {
+            const data = await response.json();
+            setUser(data.user);
+            const flashcardSets = await getFlashcardSets(data.user._id);
+            setFlashcardSets(flashcardSets);
+          } else {
+            const errorData = await response.json();
+            console.error(errorData.error || 'Failed to fetch user profile');
+          }
         } catch (error) {
           console.error(error);
         }
       } else {
         try {
-          const data = await getFlashcardSets();
-          setFlashcardSets(data);
+          const flashcardSets = await getFlashcardSets();
+          setFlashcardSets(flashcardSets);
         } catch (error) {
           console.error(error);
         }
