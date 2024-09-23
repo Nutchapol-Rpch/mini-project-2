@@ -5,7 +5,10 @@ import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 
 async function getFlashcardSets(userId) {
-  const res = await fetch(`http://localhost:3000/api/flashcard-sets?userId=${userId}`, { cache: 'no-store' });
+  const url = userId 
+    ? `http://localhost:3000/api/flashcard-sets?userId=${userId}` 
+    : `http://localhost:3000/api/flashcard-sets`;
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch flashcard sets');
   }
@@ -26,23 +29,15 @@ export default function Home() {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         try {
-          const response = await fetch(`/api/users?email=${parsedUser.email}`);
-          if (response.ok) {
-            const data = await response.json();
-            setUser(data.user);
-            const flashcardSets = await getFlashcardSets(data.user._id);
-            setFlashcardSets(flashcardSets);
-          } else {
-            const errorData = await response.json();
-            console.error(errorData.error || 'Failed to fetch user profile');
-          }
+          const data = await getFlashcardSets(parsedUser._id);
+          setFlashcardSets(data);
         } catch (error) {
           console.error(error);
         }
       } else {
         try {
-          const flashcardSets = await getFlashcardSets();
-          setFlashcardSets(flashcardSets);
+          const data = await getFlashcardSets();
+          setFlashcardSets(data);
         } catch (error) {
           console.error(error);
         }
