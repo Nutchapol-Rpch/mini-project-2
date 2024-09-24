@@ -86,14 +86,14 @@ export async function PATCH(request) {
 export async function GET(request) {
   await dbConnect();
   const { searchParams } = new URL(request.url);
-  const email = searchParams.get('email');
+  const userId = searchParams.get('userId');
 
-  if (!email) {
-    return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+  if (!userId) {
+    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
   }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findById(userId);
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });

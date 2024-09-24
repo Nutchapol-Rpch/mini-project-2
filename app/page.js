@@ -27,8 +27,13 @@ export default function Home() {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
         try {
+          const userResponse = await fetch(`/api/users?userId=${parsedUser._id}`);
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            setUser(userData.user);
+            localStorage.setItem('user', JSON.stringify(userData.user));
+          }
           const data = await getFlashcardSets(parsedUser._id);
           setFlashcardSets(data);
         } catch (error) {
