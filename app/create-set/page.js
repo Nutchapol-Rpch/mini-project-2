@@ -130,30 +130,6 @@ export default function CreateSet() {
           </button>
         </div>
       </form>
-      <section className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4">Public Flashcard Sets</h2>
-        {filteredPublicFlashcardSets.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPublicFlashcardSets.map((set) => (
-              <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-                <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
-                  <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                  <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
-                  <p className="text-gray-600 mb-4">{set.description}</p>
-                  <div className="flex justify-between items-center text-sm text-gray-500">
-                    <span>{set.cards.length} cards</span>
-                    <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <p className="text-xl">No public flashcard sets found.</p>
-          </div>
-        )}
-      </section>
     </div>
   );
 }
