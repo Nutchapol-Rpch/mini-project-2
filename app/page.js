@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 
 async function getFlashcardSets(userId) {
   const url = userId 
-    ? `http://localhost:3000/api/flashcard-sets?userId=${userId}` 
-    : `http://localhost:3000/api/flashcard-sets`;
+    ? `./api/flashcard-sets?userId=${userId}` 
+    : `./api/flashcard-sets`;
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch flashcard sets');
