@@ -6,13 +6,18 @@ export async function GET(request) {
   await dbConnect();
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get('userId');
+  const isPublic = searchParams.get('isPublic');
 
-  if (!userId) {
-    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+  const query = {};
+  if (userId) {
+    query.createdBy = userId;
+  }
+  if (isPublic) {
+    query.isPublic = true;
   }
 
   try {
-    const flashcardSets = await FlashcardSet.find({ createdBy: userId }).populate('createdBy', 'username email');
+    const flashcardSets = await FlashcardSet.find(query).populate('createdBy', 'username email');
     return NextResponse.json(flashcardSets);
   } catch (error) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });

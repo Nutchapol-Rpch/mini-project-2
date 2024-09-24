@@ -15,8 +15,18 @@ async function getFlashcardSets(userId) {
   return res.json();
 }
 
+async function getPublicFlashcardSets() {
+  const url = `./api/flashcard-sets?isPublic=true`;
+  const res = await fetch(url, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error('Failed to fetch public flashcard sets');
+  }
+  return res.json();
+}
+
 export default function Home() {
   const [flashcardSets, setFlashcardSets] = useState([]);
+  const [publicFlashcardSets, setPublicFlashcardSets] = useState([]);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,18 +39,17 @@ export default function Home() {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         try {
-          const data = await getFlashcardSets(parsedUser._id);
-          setFlashcardSets(data);
+          const userData = await getFlashcardSets(parsedUser._id);
+          setFlashcardSets(userData);
         } catch (error) {
           console.error(error);
         }
-      } else {
-        try {
-          const data = await getFlashcardSets();
-          setFlashcardSets(data);
-        } catch (error) {
-          console.error(error);
-        }
+      }
+      try {
+        const publicData = await getPublicFlashcardSets();
+        setPublicFlashcardSets(publicData);
+      } catch (error) {
+        console.error(error);
       }
       setIsLoading(false);
     };
@@ -49,6 +58,11 @@ export default function Home() {
   }, []);
 
   const filteredFlashcardSets = flashcardSets.filter((set) =>
+    set.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    set.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const filteredPublicFlashcardSets = publicFlashcardSets.filter((set) =>
     set.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     set.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -88,26 +102,58 @@ export default function Home() {
         <div className="text-center py-8">
           <p className="text-xl">Loading flashcard sets...</p>
         </div>
-      ) : filteredFlashcardSets.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredFlashcardSets.map((set) => (
-            <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-              <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
-                <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
-                <p className="text-gray-600 mb-4">{set.description}</p>
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{set.cards.length} cards</span>
-                  <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
       ) : (
-        <div className="text-center py-8">
-          <p className="text-xl">No flashcard sets found. Create your first set!</p>
-        </div>
+        <>
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Your Flashcard Sets</h2>
+            {filteredFlashcardSets.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredFlashcardSets.map((set) => (
+                  <Link key={set._id} href={`/flashcard-set/${set._id}`}>
+                    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+                      <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
+                      <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
+                      <p className="text-gray-600 mb-4">{set.description}</p>
+                      <div className="flex justify-between items-center text-sm text-gray-500">
+                        <span>{set.cards.length} cards</span>
+                        <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-xl">No flashcard sets found. Create your first set!</p>
+              </div>
+            )}
+          </section>
+
+          <section className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4">Public Flashcard Sets</h2>
+            {filteredPublicFlashcardSets.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredPublicFlashcardSets.map((set) => (
+                  <Link key={set._id} href={`/flashcard-set/${set._id}`}>
+                    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+                      <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
+                      <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
+                      <p className="text-gray-600 mb-4">{set.description}</p>
+                      <div className="flex justify-between items-center text-sm text-gray-500">
+                        <span>{set.cards.length} cards</span>
+                        <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-xl">No public flashcard sets found.</p>
+              </div>
+            )}
+          </section>
+        </>
       )}
     </div>
   );
