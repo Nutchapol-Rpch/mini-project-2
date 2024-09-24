@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useUser } from '../context/UserContext';
 
 export default function CreateSet() {
@@ -130,6 +131,7 @@ export default function CreateSet() {
           </button>
         </div>
       </form>
+      <Link href="/" className="block mt-8 text-blue-500 hover:underline">Back to Home</Link>
     </div>
   );
 }
