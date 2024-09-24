@@ -1,5 +1,6 @@
 "use client";
 
+import "./globals.css";
 import Link from 'next/link';
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
