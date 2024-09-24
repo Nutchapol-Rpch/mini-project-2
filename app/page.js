@@ -27,13 +27,8 @@ export default function Home() {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
         try {
-          const userResponse = await fetch(`/api/users?userId=${parsedUser._id}`);
-          if (userResponse.ok) {
-            const userData = await userResponse.json();
-            setUser(userData.user);
-            localStorage.setItem('user', JSON.stringify(userData.user));
-          }
           const data = await getFlashcardSets(parsedUser._id);
           setFlashcardSets(data);
         } catch (error) {
@@ -99,6 +94,7 @@ export default function Home() {
             <Link key={set._id} href={`/flashcard-set/${set._id}`}>
               <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
                 <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
+                <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
                 <p className="text-gray-600 mb-4">{set.description}</p>
                 <div className="flex justify-between items-center text-sm text-gray-500">
                   <span>{set.cards.length} cards</span>

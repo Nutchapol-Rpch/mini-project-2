@@ -7,13 +7,16 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get('userId');
 
-  let query = { $or: [{ isPublic: true }] };
-  if (userId) {
-    query.$or.push({ createdBy: userId });
+  if (!userId) {
+    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
   }
 
-  const flashcardSets = await FlashcardSet.find(query);
-  return NextResponse.json(flashcardSets);
+  try {
+    const flashcardSets = await FlashcardSet.find({ createdBy: userId }).populate('createdBy', 'username email');
+    return NextResponse.json(flashcardSets);
+  } catch (error) {
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
+  }
 }
 
 export async function POST(request) {

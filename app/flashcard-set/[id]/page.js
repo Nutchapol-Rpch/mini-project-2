@@ -71,111 +71,40 @@ export default function FlashcardSet() {
         if (res.ok) {
           router.push('/');
         } else {
-          alert('Failed to delete flashcard set');
+          console.error('Failed to delete flashcard set');
         }
       } catch (error) {
         console.error('Error deleting flashcard set:', error);
-        alert('An error occurred while deleting the flashcard set');
       }
     }
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(flashcardSet),
-      });
-      if (res.ok) {
-        setIsEditing(false);
-      } else {
-        alert('Failed to update flashcard set');
-      }
-    } catch (error) {
-      console.error('Error updating flashcard set:', error);
-      alert('An error occurred while updating the flashcard set');
-    }
-  };
-
-  const handleInputChange = (e, index, field) => {
-    const updatedCards = [...flashcardSet.cards];
-    updatedCards[index][field] = e.target.value;
-    setFlashcardSet({ ...flashcardSet, cards: updatedCards });
-  };
-
-  const handleAddCard = () => {
-    setFlashcardSet({
-      ...flashcardSet,
-      cards: [...flashcardSet.cards, { term: '', definition: '' }]
-    });
-  };
-
-  const handleRemoveCard = (index) => {
-    const updatedCards = flashcardSet.cards.filter((_, i) => i !== index);
-    setFlashcardSet({ ...flashcardSet, cards: updatedCards });
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">{flashcardSet.title}</h1>
+      <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
       <p className="text-xl text-gray-600 mb-6">{flashcardSet.description}</p>
-      
-      <div className="mb-4">
-        <button 
-          onClick={() => setIsEditing(!isEditing)}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-        >
-          {isEditing ? 'Cancel Edit' : 'Edit Set'}
-        </button>
-        <button 
-          onClick={handleDelete}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Delete Set
-        </button>
-      </div>
-
       {isEditing ? (
-        <form onSubmit={handleUpdate}>
-          <div className="mb-4">
-            <label className="block mb-2">Title</label>
-            <input
-              type="text"
-              value={flashcardSet.title}
-              onChange={(e) => setFlashcardSet({ ...flashcardSet, title: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">Description</label>
-            <textarea
-              value={flashcardSet.description}
-              onChange={(e) => setFlashcardSet({ ...flashcardSet, description: e.target.value })}
-              className="w-full px-3 py-2 border rounded-lg"
-            />
-          </div>
+        <form onSubmit={handleSaveChanges}>
           {flashcardSet.cards.map((card, index) => (
-            <div key={index} className="mb-4 p-4 border rounded-lg">
+            <div key={index} className="mb-4">
               <input
                 type="text"
                 value={card.term}
-                onChange={(e) => handleInputChange(e, index, 'term')}
+                onChange={(e) => handleCardChange(index, 'term', e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg mb-2"
                 placeholder="Term"
               />
-              <input
-                type="text"
+              <textarea
                 value={card.definition}
-                onChange={(e) => handleInputChange(e, index, 'definition')}
-                className="w-full px-3 py-2 border rounded-lg mb-2"
+                onChange={(e) => handleCardChange(index, 'definition', e.target.value)}
+                className="w-full px-3 py-2 border rounded-lg"
                 placeholder="Definition"
               />
               <button
                 type="button"
                 onClick={() => handleRemoveCard(index)}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2"
               >
                 Remove Card
               </button>

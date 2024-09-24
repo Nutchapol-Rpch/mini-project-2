@@ -4,7 +4,7 @@ import FlashcardSet from '@/models/FlashcardSet';
 
 export async function GET(request, { params }) {
   await dbConnect();
-  const flashcardSet = await FlashcardSet.findById(params.id);
+  const flashcardSet = await FlashcardSet.findById(params.id).populate('createdBy', 'username email');
   if (!flashcardSet) {
     return NextResponse.json({ error: 'Flashcard set not found' }, { status: 404 });
   }
