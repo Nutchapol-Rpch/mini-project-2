@@ -22,6 +22,7 @@ export default function FlashcardSet() {
   const [editedCards, setEditedCards] = useState([]);
   const [editedTitle, setEditedTitle] = useState('');
   const [editedDescription, setEditedDescription] = useState('');
+  const [editedIsPublic, setEditedIsPublic] = useState(false);
   const params = useParams();
   const router = useRouter();
   const { user } = useUser();
@@ -34,6 +35,7 @@ export default function FlashcardSet() {
         setEditedCards(data.cards);
         setEditedTitle(data.title);
         setEditedDescription(data.description);
+        setEditedIsPublic(data.isPublic);
       } catch (error) {
         console.error(error);
       }
@@ -110,6 +112,7 @@ export default function FlashcardSet() {
           title: editedTitle,
           description: editedDescription,
           cards: editedCards,
+          isPublic: editedIsPublic,
         }),
       });
       if (res.ok) {
@@ -155,6 +158,17 @@ export default function FlashcardSet() {
             onChange={(e) => setEditedDescription(e.target.value)}
             className="text-xl text-gray-600 mb-6 w-full"
           />
+          <div className="mb-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={editedIsPublic}
+                onChange={(e) => setEditedIsPublic(e.target.checked)}
+                className="mr-2"
+              />
+              Make this set public
+            </label>
+          </div>
           {editedCards.map((card, index) => (
             <div key={index} className="mb-4">
               <input
