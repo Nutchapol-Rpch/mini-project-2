@@ -25,10 +25,14 @@ export default function Register() {
       return;
     }
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }),
       });
       if (response.ok) {
         router.push('/login');

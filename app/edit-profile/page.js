@@ -41,6 +41,28 @@ export default function EditProfile() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      try {
+        const response = await fetch('/api/users', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user._id }),
+        });
+        if (response.ok) {
+          localStorage.removeItem('user');
+          setUser(null);
+          router.push('/');
+        } else {
+          const data = await response.json();
+          setError(data.error || 'Failed to delete account');
+        }
+      } catch (error) {
+        setError('An error occurred. Please try again.');
+      }
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Edit Profile</h1>
@@ -80,6 +102,13 @@ export default function EditProfile() {
         </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
           Update Profile
+        </button>
+        <button
+          type="button"
+          onClick={handleDeleteAccount}
+          className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 mt-4"
+        >
+          Delete Account
         </button>
       </form>
     </div>
