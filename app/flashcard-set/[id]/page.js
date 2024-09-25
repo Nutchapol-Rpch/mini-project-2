@@ -136,7 +136,20 @@ export default function FlashcardSet() {
         throw new Error('Failed to update flashcard set');
       }
 
-      // Update cards
+      // Delete existing cards
+      const deleteRes = await fetch(`http://localhost:3000/api/card`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          flashcardSetId: params.id,
+        }),
+      });
+
+      if (!deleteRes.ok) {
+        throw new Error('Failed to delete existing cards');
+      }
+
+      // Create new cards
       const cardRes = await fetch(`http://localhost:3000/api/card`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

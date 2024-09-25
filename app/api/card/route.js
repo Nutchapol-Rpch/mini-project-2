@@ -68,15 +68,28 @@ export async function POST(request) {
   }
 }
 
+// Delete Cards for a flashcard set
+export async function DELETE(request) {
+  await dbConnect();
+  const { flashcardSetId } = await request.json();
+
+  try {
+    // Delete existing cards for this flashcard set
+    const result = await Card.deleteMany({ flashcardSet: flashcardSetId });
+
+    return NextResponse.json({ message: 'Cards deleted successfully', deletedCount: result.deletedCount }, { status: 200 });
+  } catch (error) {
+    console.error('Error deleting cards:', error);
+    return NextResponse.json({ error: error.message || 'Failed to delete cards' }, { status: 500 });
+  }
+}
+
 // Update Card data model
 export async function PUT(request) {
   await dbConnect();
   const { flashcardSetId, cards } = await request.json();
 
   try {
-    // Delete existing cards for this flashcard set
-    await Card.deleteMany({ flashcardSet: flashcardSetId });
-
     // Create new cards
     const newCards = await Card.insertMany(
       cards.map(card => ({
