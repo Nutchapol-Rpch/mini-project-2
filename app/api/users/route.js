@@ -4,7 +4,7 @@ import User from '@/models/User';
 import bcrypt from 'bcrypt';
 import FlashcardSet from '@/models/FlashcardSet';
 
-// Login route
+// Login route (Read user data model)
 export async function POST(request) {
   await dbConnect();
   const { email, password } = await request.json();
@@ -28,7 +28,7 @@ export async function POST(request) {
   }
 }
 
-// Register route
+// Register route (Create user data model)
 export async function PUT(request) {
   await dbConnect();
   const { username, email, password } = await request.json();
@@ -51,7 +51,7 @@ export async function PUT(request) {
   }
 }
 
-// Update profile route
+// Update profile route (Update user data model)
 export async function PATCH(request) {
   await dbConnect();
   const { username, email, password } = await request.json();
@@ -78,7 +78,7 @@ export async function PATCH(request) {
   }
 }
 
-// Fetch user profile by email
+// Fetch user profile by email (Read user data model)
 export async function GET(request) {
   await dbConnect();
   const { searchParams } = new URL(request.url);
@@ -101,7 +101,7 @@ export async function GET(request) {
   }
 }
 
-// Delete user account
+// Delete user account (Delete user data model)
 export async function DELETE(request) {
   await dbConnect();
   const { userId } = await request.json();

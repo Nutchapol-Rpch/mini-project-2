@@ -26,7 +26,7 @@ export default function Register() {
     }
     try {
       const response = await fetch('/api/users', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: formData.username,
