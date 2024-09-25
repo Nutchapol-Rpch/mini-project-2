@@ -10,7 +10,17 @@ async function getFlashcardSet(id) {
   if (!res.ok) {
     throw new Error('Failed to fetch flashcard set');
   }
-  return res.json();
+  const flashcardSet = await res.json();
+
+  const cardRes = await fetch(`/api/card?flashcardSetIds=${id}`, { cache: 'no-store' });
+  if (!cardRes.ok) {
+    throw new Error('Failed to fetch cards');
+  }
+  const cardData = await cardRes.json();
+
+  flashcardSet.cards = cardData;
+
+  return flashcardSet;
 }
 
 export default function FlashcardSet() {
@@ -32,12 +42,12 @@ export default function FlashcardSet() {
       try {
         const data = await getFlashcardSet(params.id);
         setFlashcardSet(data);
-        setEditedCards(data.cards);
+        setEditedCards(data.cards || []);
         setEditedTitle(data.title);
         setEditedDescription(data.description);
         setEditedIsPublic(data.isPublic);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching flashcard set:', error);
       }
     };
 
@@ -243,58 +253,64 @@ export default function FlashcardSet() {
             <div>
               <button 
                 onClick={startPractice}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-6"
               >
                 Start Practice
               </button>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {flashcardSet.cards.map((card, index) => (
-                  <div key={index} className="border rounded-lg p-4 bg-white">
-                    <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
-                    <p>Definition: {card.definition}</p>
-                  </div>
-                ))}
+                {editedCards.length > 0 ? (
+                  editedCards.map((card, index) => (
+                    <div key={index} className="border rounded-lg p-4 bg-white">
+                      <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
+                      <p>Definition: {card.definition}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No cards available for this flashcard set.</p>
+                )}
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center">
-              <div 
-                className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center"
-                onClick={flipCard}
-              >
-                <div className="text-center p-4">
-                  {isFlipped 
-                    ? flashcardSet.cards[currentCardIndex].definition
-                    : flashcardSet.cards[currentCardIndex].term
-                  }
+            isPracticeMode && flashcardSet.cards && flashcardSet.cards.length > 0 && (
+              <div className="flex flex-col items-center">
+                <div 
+                  className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center"
+                  onClick={flipCard}
+                >
+                  <div className="text-center p-4">
+                    {isFlipped 
+                      ? flashcardSet.cards[currentCardIndex].definition
+                      : flashcardSet.cards[currentCardIndex].term
+                    }
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-between w-96">
+                <div className="flex justify-between w-96">
+                  <button 
+                    onClick={prevCard} 
+                    disabled={currentCardIndex === 0}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+                  >
+                    Previous
+                  </button>
+                  <span className="py-2">
+                    {currentCardIndex + 1} / {flashcardSet.cards.length}
+                  </span>
+                  <button 
+                    onClick={nextCard}
+                    disabled={currentCardIndex === flashcardSet.cards.length - 1}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
+                  >
+                    Next
+                  </button>
+                </div>
                 <button 
-                  onClick={prevCard} 
-                  disabled={currentCardIndex === 0}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+                  onClick={() => setIsPracticeMode(false)}
+                  className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                 >
-                  Previous
-                </button>
-                <span className="py-2">
-                  {currentCardIndex + 1} / {flashcardSet.cards.length}
-                </span>
-                <button 
-                  onClick={nextCard}
-                  disabled={currentCardIndex === flashcardSet.cards.length - 1}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
-                >
-                  Next
+                  End Practice
                 </button>
               </div>
-              <button 
-                onClick={() => setIsPracticeMode(false)}
-                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-              >
-                End Practice
-              </button>
-            </div>
+            )
           )}
         </>
       )}
