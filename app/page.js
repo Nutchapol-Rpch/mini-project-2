@@ -72,7 +72,7 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        <header className="mb-8 p-6 bg-white rounded-lg shadow flex justify-between items-center">
+        <header className="container mx-auto px-6 py-4">
           <div>
             <h1 className="text-4xl font-bold mb-2 text-blue-700">Welcome to Budzdy</h1>
             <p className="text-lg text-gray-500">Create, study, and master your flashcards</p>
