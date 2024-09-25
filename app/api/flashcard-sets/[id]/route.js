@@ -34,6 +34,7 @@ export async function GET(request, { params }) {
   }
 }
 
+// Update FlashcardSet data model
 export async function PUT(request, { params }) {
   await dbConnect();
   const { id } = params;
@@ -60,6 +61,7 @@ export async function PUT(request, { params }) {
   }
 }
 
+// Delete FlashcardSet data model
 export async function DELETE(request, { params }) {
   await dbConnect();
   const { id } = params;
