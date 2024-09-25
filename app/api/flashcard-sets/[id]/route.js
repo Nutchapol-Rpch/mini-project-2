@@ -3,6 +3,7 @@ import dbConnect from '@/lib/mongodb';
 import FlashcardSet from '@/models/FlashcardSet';
 import Card from '@/models/Card';
 
+// Read FlashcardSet data model by ID
 export async function GET(request, { params }) {
   await dbConnect();
   const { id } = params;
