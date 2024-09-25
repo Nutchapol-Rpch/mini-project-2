@@ -262,7 +262,7 @@ export default function FlashcardSet() {
           ) : (
             <div className="flex flex-col items-center">
               <div
-                className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center"
+                className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center transition-transform transform hover:scale-105"
                 onClick={flipCard}
               >
                 <div className="text-center p-4">
@@ -272,31 +272,32 @@ export default function FlashcardSet() {
                   }
                 </div>
               </div>
-              <div className="flex justify-between w-96 mb-4">
+              <div className="flex items-center justify-between w-96 mb-4">
                 <button
                   onClick={prevCard}
                   disabled={currentCardIndex === 0}
-                  className={`bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l ${currentCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-l shadow-md transition duration-300 ease-in-out ${currentCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   Previous
                 </button>
-                <span className="py-2">
+                <span className="text-lg font-semibold text-gray-700">
                   {currentCardIndex + 1} / {flashcardSet.cards.length}
                 </span>
                 <button
                   onClick={nextCard}
                   disabled={currentCardIndex === flashcardSet.cards.length - 1}
-                  className={`bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r ${currentCardIndex === flashcardSet.cards.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-r shadow-md transition duration-300 ease-in-out ${currentCardIndex === flashcardSet.cards.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   Next
                 </button>
               </div>
               <button
                 onClick={() => setIsPracticeMode(false)}
-                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out"
               >
                 End Practice
               </button>
+
             </div>
           )}
         </>
