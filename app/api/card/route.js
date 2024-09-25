@@ -4,6 +4,7 @@ import dbConnect from '@/lib/mongodb';
 import Card from '@/models/Card';
 import FlashcardSet from '@/models/FlashcardSet';
 
+// Read Card data model
 export async function GET(request) {
   await dbConnect();
   const { searchParams } = new URL(request.url);
@@ -40,6 +41,7 @@ export async function GET(request) {
   }
 }
 
+// Create Card data model
 export async function POST(request) {
   await dbConnect();
   const data = await request.json();
@@ -66,6 +68,7 @@ export async function POST(request) {
   }
 }
 
+// Update Card data model
 export async function PUT(request) {
   await dbConnect();
   const { flashcardSetId, cards } = await request.json();
