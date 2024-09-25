@@ -68,7 +68,7 @@ export async function POST(request) {
   }
 }
 
-// Delete Cards for a flashcard set
+// Delete Card data model for a flashcard set
 export async function DELETE(request) {
   await dbConnect();
   const { flashcardSetId } = await request.json();
