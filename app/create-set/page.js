@@ -29,27 +29,42 @@ export default function CreateSet() {
       alert('You must be logged in to create a flashcard set');
       return;
     }
-    const flashcardSet = {
-      title,
-      description,
-      cards,
-      isPublic,
-      createdBy: user._id
-    };
-    console.log('Flashcard set to be created:', flashcardSet); // Add this line for debugging
+
     try {
-      const response = await fetch('/api/flashcard-sets', {
+      // First, save the flashcard set without cards
+      const flashcardSet = {
+        title,
+        description,
+        isPublic,
+        createdBy: user._id,
+      };
+
+      const setResponse = await fetch('/api/flashcard-sets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(flashcardSet),
       });
-      if (response.ok) {
-        router.push('/');
-      } else {
-        const errorData = await response.json();
-        console.error('Server response:', errorData);
+
+      if (!setResponse.ok) {
+        const errorData = await setResponse.json();
         alert(errorData.error || 'Failed to create flashcard set');
+        return;
       }
+
+      const savedSet = await setResponse.json();
+
+      // Now save the cards
+      const cardPromises = cards.map(card => {
+        return fetch('/api/cards', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...card, flashcardSet: savedSet._id }),
+        });
+      });
+
+      await Promise.all(cardPromises);
+
+      router.push('/');
     } catch (error) {
       console.error('Error creating flashcard set:', error);
       alert('An error occurred while creating the flashcard set');
