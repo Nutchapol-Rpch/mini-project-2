@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../../context/UserContext';
 
 async function getFlashcardSet(id) {
-  const res = await fetch(`http://localhost:3000/api/flashcard-sets/${id}`, { cache: 'no-store' });
+  const res = await fetch(`/api/flashcard-sets/${id}`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch flashcard set');
   }
