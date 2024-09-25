@@ -1,13 +1,13 @@
 "use client";
 
-import "./globals.css";
 import Link from 'next/link';
-import { FaPlus, FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
+import { FaPlus, FaSearch } from 'react-icons/fa';
+import "./globals.css";
 
 async function getFlashcardSets(userId) {
-  const url = userId 
-    ? `./api/flashcard-sets?userId=${userId}` 
+  const url = userId
+    ? `./api/flashcard-sets?userId=${userId}`
     : `./api/flashcard-sets`;
   const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) {
@@ -69,93 +69,109 @@ export default function Home() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <header className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-bold mb-4">Welcome to Budzdy</h1>
-          <p className="text-xl text-gray-600">Create, study, and master your flashcards</p>
-        </div>
-        {user && <div className="text-xl">Hello, {user.name}</div>}
-      </header>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="container mx-auto px-6 py-8">
+        {/* Header Section */}
+        <header className="mb-8 p-6 bg-white rounded-lg shadow flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 text-blue-700">Welcome to Budzdy</h1>
+            <p className="text-lg text-gray-500">Create, study, and master your flashcards</p>
+          </div>
+          {user && (
+            <div className="text-xl text-gray-700 font-medium">
+              Hello, {user.name}
+            </div>
+          )}
+        </header>
 
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Your Flashcard Sets</h2>
-        <Link href="/create-set" className="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          <FaPlus className="mr-2" />
-          Create New Set
-        </Link>
-      </div>
-
-      <div className="mb-6">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search your sets"
-            className="w-full pl-10 pr-4 py-2 border rounded-lg"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        {/* Flashcard Sets Section */}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800">Your Flashcard Sets</h2>
+          <Link
+            href="/create-set"
+            className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+          >
+            <FaPlus className="mr-2" />
+            Create New Set
+          </Link>
         </div>
-      </div>
 
-      {isLoading ? (
-        <div className="text-center py-8">
-          <p className="text-xl">Loading flashcard sets...</p>
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search your sets"
+              className="w-full pl-12 pr-4 py-3 border rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          </div>
         </div>
-      ) : (
-        <>
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">Your Flashcard Sets</h2>
-            {filteredFlashcardSets.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredFlashcardSets.map((set) => (
-                  <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-                    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
-                      <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                      <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
-                      <p className="text-gray-600 mb-4">{set.description}</p>
-                      <div className="flex justify-between items-center text-sm text-gray-500">
-                        <span>{set.cards.length} cards</span>
-                        <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="text-center py-10">
+            <p className="text-xl text-gray-600">Loading flashcard sets...</p>
+          </div>
+        ) : (
+          <>
+            {/* Your Flashcard Sets */}
+            <section>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Flashcard Sets</h2>
+              {filteredFlashcardSets.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredFlashcardSets.map((set) => (
+                    <Link key={set._id} href={`/flashcard-set/${set._id}`}>
+                      <div className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
+                        <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
+                        <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
+                        <p className="text-gray-600 mb-3">{set.description}</p>
+                        <div className="flex justify-between items-center text-sm text-gray-400">
+                          <span>{set.cards.length} cards</span>
+                          <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-xl">No flashcard sets found. Create your first set!</p>
-              </div>
-            )}
-          </section>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10 bg-white rounded-md shadow-sm">
+                  <p className="text-lg text-gray-700">No flashcard sets found. Create your first set!</p>
+                </div>
+              )}
+            </section>
 
-          <section className="mt-8">
-            <h2 className="text-2xl font-semibold mb-4">Public Flashcard Sets</h2>
-            {filteredPublicFlashcardSets.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredPublicFlashcardSets.map((set) => (
-                  <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-                    <div className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
-                      <h3 className="text-xl font-semibold mb-2">{set.title}</h3>
-                      <p className="text-gray-600 mb-2">Created by: {set.createdBy.username}</p>
-                      <p className="text-gray-600 mb-4">{set.description}</p>
-                      <div className="flex justify-between items-center text-sm text-gray-500">
-                        <span>{set.cards.length} cards</span>
-                        <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+            {/* Public Flashcard Sets */}
+            <section className="mt-10">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Public Flashcard Sets</h2>
+              {filteredPublicFlashcardSets.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredPublicFlashcardSets.map((set) => (
+                    <Link key={set._id} href={`/flashcard-set/${set._id}`}>
+                      <div className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
+                        <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
+                        <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
+                        <p className="text-gray-600 mb-3">{set.description}</p>
+                        <div className="flex justify-between items-center text-sm text-gray-400">
+                          <span>{set.cards.length} cards</span>
+                          <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-xl">No public flashcard sets found.</p>
-              </div>
-            )}
-          </section>
-        </>
-      )}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10 bg-white rounded-md shadow-sm">
+                  <p className="text-lg text-gray-700">No public flashcard sets found.</p>
+                </div>
+              )}
+            </section>
+          </>
+        )}
+      </div>
     </div>
+
   );
 }
