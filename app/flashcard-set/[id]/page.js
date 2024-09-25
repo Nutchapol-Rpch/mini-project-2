@@ -227,26 +227,27 @@ export default function FlashcardSet() {
           <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
           <p className="text-lg text-gray-600 mb-6">{flashcardSet.description}</p>
           {isOwner && (
-            <div className="mb-4">
+            <div className="mb-6 flex justify-start space-x-4">
               <button
                 onClick={handleEdit}
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
               >
                 Edit Set
               </button>
               <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
               >
                 Delete Set
               </button>
             </div>
+
           )}
           {!isPracticeMode ? (
-            <div>
+            <div className>
               <button
                 onClick={startPractice}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 ease-in-out mb-6"
               >
                 Start Practice
               </button>
