@@ -138,20 +138,22 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        <header className="container mx-auto px-6 py-4">
-          <div>
-            <h1 className="text-4xl font-bold mb-2 text-blue-700">Welcome to Budzdy</h1>
-            <p className="text-lg text-gray-500">Create, study, and master your flashcards</p>
-          </div>
-          {user && (
-            <div className="text-xl text-gray-700 font-medium">
-              Hello, {user.name}
+        {/* Header Section */}
+        <header className="container mx-auto px-6 py-8 bg-white shadow-md rounded-lg">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-5xl font-extrabold text-blue-800 mb-3">Welcome to Budzdy</h1>
+              <p className="text-lg text-gray-600">Create, study, and master your flashcards</p>
             </div>
-          )}
+            {user && (
+              <div className="text-xl font-medium text-gray-700">
+                Hello, {user.name}
+              </div>
+            )}
+          </div>
         </header>
-
         {/* Flashcard Sets Section */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 mt-8">
           <h2 className="text-2xl font-semibold text-gray-800">Your Flashcard Sets</h2>
           <Link
             href="/create-set"

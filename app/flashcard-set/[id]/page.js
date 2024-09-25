@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext';
 
 async function getFlashcardSet(id) {
@@ -181,19 +181,22 @@ export default function FlashcardSet() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-6 py-8">
       {isEditing ? (
-        <form onSubmit={handleSaveChanges}>
+        <form onSubmit={handleSaveChanges} className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-center">Edit Flashcard Set</h2>
           <input
             type="text"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
-            className="text-3xl font-bold mb-4 w-full"
+            className="text-2xl font-bold mb-4 w-full border border-gray-300 rounded-lg px-3 py-2"
+            placeholder="Title"
           />
           <textarea
             value={editedDescription}
             onChange={(e) => setEditedDescription(e.target.value)}
-            className="text-xl text-gray-600 mb-6 w-full"
+            className="text-lg text-gray-600 mb-6 w-full border border-gray-300 rounded-lg px-3 py-2"
+            placeholder="Description"
           />
           <div className="mb-4">
             <label className="flex items-center">
@@ -203,22 +206,22 @@ export default function FlashcardSet() {
                 onChange={(e) => setEditedIsPublic(e.target.checked)}
                 className="mr-2"
               />
-              Make this set public
+              <span className="text-lg">Make this set public</span>
             </label>
           </div>
           {editedCards.map((card, index) => (
-            <div key={index} className="mb-4">
+            <div key={index} className="mb-4 border border-gray-300 p-4 rounded-lg">
               <input
                 type="text"
                 value={card.term}
                 onChange={(e) => handleCardChange(index, 'term', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg mb-2"
+                className="w-full mb-2 border border-gray-300 rounded-lg px-3 py-2"
                 placeholder="Term"
               />
               <textarea
                 value={card.definition}
                 onChange={(e) => handleCardChange(index, 'definition', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2"
                 placeholder="Definition"
               />
               <button
@@ -239,16 +242,16 @@ export default function FlashcardSet() {
               Add New Card
             </button>
             <div className="flex flex-col space-y-2 w-full">
-              <button 
-                type="submit" 
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full"
               >
                 Save Changes
               </button>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleCancelEdit}
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-2"
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded w-full"
               >
                 Cancel
               </button>
@@ -259,18 +262,18 @@ export default function FlashcardSet() {
         <>
           <h1 className="text-3xl font-bold mb-4">{flashcardSet.title}</h1>
           <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
-          <p className="text-xl text-gray-600 mb-6">{flashcardSet.description}</p>
-          {isOwner && (
-            <div className="mb-4">
-              <button 
+          <p className="text-lg text-gray-600 mb-6">{flashcardSet.description}</p>
+          {!isPracticeMode && isOwner && ( // Show buttons only if not in practice mode
+            <div className="mb-6 flex justify-start space-x-4">
+              <button
                 onClick={handleEdit}
-                className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mr-2"
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
               >
                 Edit Set
               </button>
-              <button 
+              <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
               >
                 Delete Set
               </button>
@@ -278,9 +281,9 @@ export default function FlashcardSet() {
           )}
           {!isPracticeMode ? (
             <div>
-              <button 
+              <button
                 onClick={startPractice}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-6"
+                className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 ease-in-out mb-6"
               >
                 Start Practice
               </button>
@@ -330,18 +333,19 @@ export default function FlashcardSet() {
                     Next
                   </button>
                 </div>
-                <button 
-                  onClick={() => setIsPracticeMode(false)}
-                  className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  End Practice
-                </button>
+              <button
+                onClick={() => setIsPracticeMode(false)}
+                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out"
+              >
+                End Practice
+              </button>
               </div>
             )
           )}
         </>
       )}
-      <Link href="/" className="block mt-8 text-blue-500 hover:underline">Back to Home</Link>
+      <Link href="/" className="block mt-8 text-blue-500 hover:underline text-center">Back to Home</Link>
     </div>
   );
+
 }

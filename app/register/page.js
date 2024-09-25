@@ -49,7 +49,11 @@ export default function Register() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-center">Register</h1>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && (
+          <div className="text-center mb-4">
+            <p className="text-red-500">{error}</p>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="max-w-md mx-auto">
           <div className="mb-4">
             <label htmlFor="username" className="block mb-2">Username</label>
