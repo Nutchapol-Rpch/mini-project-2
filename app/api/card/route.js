@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/mongodb';
 import Card from '@/models/Card';
+import FlashcardSet from '@/models/FlashcardSet';
 
 export async function GET(request) {
   await dbConnect();
@@ -62,5 +63,34 @@ export async function POST(request) {
   } catch (error) {
     console.error('Error creating card:', error);
     return NextResponse.json({ error: error.message || 'Failed to create card' }, { status: 500 });
+  }
+}
+
+export async function PUT(request) {
+  await dbConnect();
+  const { flashcardSetId, cards } = await request.json();
+
+  try {
+    // Delete existing cards for this flashcard set
+    await Card.deleteMany({ flashcardSet: flashcardSetId });
+
+    // Create new cards
+    const newCards = await Card.insertMany(
+      cards.map(card => ({
+        ...card,
+        flashcardSet: flashcardSetId
+      }))
+    );
+
+    // Update the FlashcardSet with new card references
+    await FlashcardSet.findByIdAndUpdate(
+      flashcardSetId,
+      { $set: { cards: newCards.map(card => card._id) } }
+    );
+
+    return NextResponse.json({ message: 'Cards updated successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Error updating cards:', error);
+    return NextResponse.json({ error: error.message || 'Failed to update cards' }, { status: 500 });
   }
 }

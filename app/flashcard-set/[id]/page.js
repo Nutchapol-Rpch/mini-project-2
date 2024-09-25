@@ -121,23 +121,44 @@ export default function FlashcardSet() {
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
+      // Update flashcard set
+      const setRes = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: editedTitle,
           description: editedDescription,
-          cards: editedCards,
           isPublic: editedIsPublic,
         }),
       });
-      if (res.ok) {
-        const updatedSet = await res.json();
-        setFlashcardSet(updatedSet);
-        setIsEditing(false);
-      } else {
-        console.error('Failed to update flashcard set');
+
+      if (!setRes.ok) {
+        throw new Error('Failed to update flashcard set');
       }
+
+      // Update cards
+      const cardRes = await fetch(`http://localhost:3000/api/card`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          flashcardSetId: params.id,
+          cards: editedCards,
+        }),
+      });
+
+      if (!cardRes.ok) {
+        throw new Error('Failed to update cards');
+      }
+
+      const updatedSet = await setRes.json();
+      setFlashcardSet({
+        ...updatedSet,
+        cards: editedCards,
+      });
+      setIsEditing(false);
+
+      // Update localStorage to trigger a refetch on the home page
+      localStorage.setItem('flashcardSetUpdated', 'true');
     } catch (error) {
       console.error('Error updating flashcard set:', error);
     }

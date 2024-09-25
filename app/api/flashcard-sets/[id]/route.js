@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import FlashcardSet from '@/models/FlashcardSet';
+import Card from '@/models/Card';
 
 export async function GET(request, { params }) {
   await dbConnect();
@@ -16,7 +17,17 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: 'Flashcard set not found' }, { status: 404 });
     }
 
-    return NextResponse.json(flashcardSet);
+    // Sanitize the user data
+    const safeFlashcardSet = {
+      ...flashcardSet,
+      createdBy: flashcardSet.createdBy ? {
+        _id: flashcardSet.createdBy._id,
+        username: flashcardSet.createdBy.username,
+        email: flashcardSet.createdBy.email
+      } : null
+    };
+
+    return NextResponse.json(safeFlashcardSet);
   } catch (error) {
     console.error('Error fetching flashcard set:', error);
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
@@ -29,24 +40,17 @@ export async function PUT(request, { params }) {
   const data = await request.json();
 
   try {
-    const updatedSet = await FlashcardSet.findByIdAndUpdate(id, data, { new: true })
-      .populate('createdBy', 'username email')
-      .lean();
+    const updatedSet = await FlashcardSet.findByIdAndUpdate(id, 
+      { 
+        title: data.title, 
+        description: data.description, 
+        isPublic: data.isPublic 
+      }, 
+      { new: true }
+    ).populate('createdBy', 'username email').lean();
 
     if (!updatedSet) {
       return NextResponse.json({ error: 'Flashcard set not found' }, { status: 404 });
-    }
-
-    // Update cards
-    if (data.cards) {
-      await Promise.all(data.cards.map(async (card) => {
-        if (card._id) {
-          await Card.findByIdAndUpdate(card._id, card);
-        } else {
-          const newCard = new Card({ ...card, flashcardSet: id });
-          await newCard.save();
-        }
-      }));
     }
 
     return NextResponse.json(updatedSet);

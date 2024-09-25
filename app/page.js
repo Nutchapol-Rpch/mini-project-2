@@ -103,9 +103,25 @@ export default function Home() {
         console.error(error);
       }
       setIsLoading(false);
+      
+      // Clear the update flag
+      localStorage.removeItem('flashcardSetUpdated');
     };
 
     fetchData();
+
+    // Add an event listener for storage changes
+    const handleStorageChange = (e) => {
+      if (e.key === 'flashcardSetUpdated' && e.newValue === 'true') {
+        fetchData();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const filteredFlashcardSets = flashcardSets.filter((set) =>
