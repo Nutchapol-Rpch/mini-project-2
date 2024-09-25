@@ -6,11 +6,27 @@ import { useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext';
 
 async function getFlashcardSet(id) {
-  const res = await fetch(`http://localhost:3000/api/flashcard-sets/${id}`, { cache: 'no-store' });
+  const res = await fetch(`/api/flashcard-sets/${id}`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error('Failed to fetch flashcard set');
   }
-  return res.json();
+  const flashcardSet = await res.json();
+
+  const cardRes = await fetch(`/api/card?flashcardSetIds=${id}`, { cache: 'no-store' });
+  if (!cardRes.ok) {
+    throw new Error('Failed to fetch cards');
+  }
+  const cardData = await cardRes.json();
+
+  if (cardData.length > 0) {
+    flashcardSet.cardCount = cardData[0].cardCount;
+    flashcardSet.cards = cardData[0].cards;
+  } else {
+    flashcardSet.cardCount = 0;
+    flashcardSet.cards = [];
+  }
+
+  return flashcardSet;
 }
 
 export default function FlashcardSet() {
@@ -32,12 +48,12 @@ export default function FlashcardSet() {
       try {
         const data = await getFlashcardSet(params.id);
         setFlashcardSet(data);
-        setEditedCards(data.cards);
+        setEditedCards(data.cards || []);
         setEditedTitle(data.title);
         setEditedDescription(data.description);
         setEditedIsPublic(data.isPublic);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching flashcard set:', error);
       }
     };
 
@@ -105,23 +121,44 @@ export default function FlashcardSet() {
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
+      // Update flashcard set
+      const setRes = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: editedTitle,
           description: editedDescription,
-          cards: editedCards,
           isPublic: editedIsPublic,
         }),
       });
-      if (res.ok) {
-        const updatedSet = await res.json();
-        setFlashcardSet(updatedSet);
-        setIsEditing(false);
-      } else {
-        console.error('Failed to update flashcard set');
+
+      if (!setRes.ok) {
+        throw new Error('Failed to update flashcard set');
       }
+
+      // Update cards
+      const cardRes = await fetch(`http://localhost:3000/api/card`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          flashcardSetId: params.id,
+          cards: editedCards,
+        }),
+      });
+
+      if (!cardRes.ok) {
+        throw new Error('Failed to update cards');
+      }
+
+      const updatedSet = await setRes.json();
+      setFlashcardSet({
+        ...updatedSet,
+        cards: editedCards,
+      });
+      setIsEditing(false);
+
+      // Update localStorage to trigger a refetch on the home page
+      localStorage.setItem('flashcardSetUpdated', 'true');
     } catch (error) {
       console.error('Error updating flashcard set:', error);
     }
@@ -251,54 +288,59 @@ export default function FlashcardSet() {
                 Start Practice
               </button>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {flashcardSet.cards.map((card, index) => (
-                  <div key={index} className="border rounded-lg p-4 bg-white shadow">
-                    <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
-                    <p>Definition: {card.definition}</p>
-                  </div>
-                ))}
+                {flashcardSet.cards && flashcardSet.cards.length > 0 ? (
+                  flashcardSet.cards.map((card, index) => (
+                    <div key={index} className="border rounded-lg p-4 bg-white">
+                      <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
+                      <p>Definition: {card.definition}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>No cards available for this flashcard set.</p>
+                )}
               </div>
             </div>
           ) : (
-            <div className="flex flex-col items-center">
-              <div
-                className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center transition-transform transform hover:scale-105"
-                onClick={flipCard}
-              >
-                <div className="text-center p-4">
-                  {isFlipped
-                    ? flashcardSet.cards[currentCardIndex].definition
-                    : flashcardSet.cards[currentCardIndex].term
-                  }
+            isPracticeMode && flashcardSet.cards && flashcardSet.cards.length > 0 && (
+              <div className="flex flex-col items-center">
+                <div 
+                  className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center"
+                  onClick={flipCard}
+                >
+                  <div className="text-center p-4">
+                    {isFlipped 
+                      ? flashcardSet.cards[currentCardIndex].definition
+                      : flashcardSet.cards[currentCardIndex].term
+                    }
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center justify-between w-96 mb-4">
-                <button
-                  onClick={prevCard}
-                  disabled={currentCardIndex === 0}
-                  className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-l shadow-md transition duration-300 ease-in-out ${currentCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  Previous
-                </button>
-                <span className="text-lg font-semibold text-gray-700">
-                  {currentCardIndex + 1} / {flashcardSet.cards.length}
-                </span>
-                <button
-                  onClick={nextCard}
-                  disabled={currentCardIndex === flashcardSet.cards.length - 1}
-                  className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-r shadow-md transition duration-300 ease-in-out ${currentCardIndex === flashcardSet.cards.length - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  Next
-                </button>
-              </div>
+                <div className="flex justify-between w-96">
+                  <button 
+                    onClick={prevCard} 
+                    disabled={currentCardIndex === 0}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+                  >
+                    Previous
+                  </button>
+                  <span className="py-2">
+                    {currentCardIndex + 1} / {flashcardSet.cards.length}
+                  </span>
+                  <button 
+                    onClick={nextCard}
+                    disabled={currentCardIndex === flashcardSet.cards.length - 1}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
+                  >
+                    Next
+                  </button>
+                </div>
               <button
                 onClick={() => setIsPracticeMode(false)}
                 className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out"
               >
                 End Practice
               </button>
-
-            </div>
+              </div>
+            )
           )}
         </>
       )}
