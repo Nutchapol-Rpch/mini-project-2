@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import dbConnect from '@/lib/mongodb';
 import Card from '@/models/Card';
 
@@ -8,26 +9,20 @@ export async function GET(request) {
   const flashcardSetIds = searchParams.get('flashcardSetIds')?.split(',') || [];
 
   try {
-    const cards = await Card.find({ flashcardSet: { $in: flashcardSetIds } })
-      .populate('flashcardSet', 'title description isPublic createdBy')
-      .populate('flashcardSet.createdBy', 'username');
+    const cardCounts = await Card.aggregate([
+      { $match: { flashcardSet: { $in: flashcardSetIds.map(id => new mongoose.Types.ObjectId(id)) } } },
+      { $group: { _id: '$flashcardSet', count: { $sum: 1 } } }
+    ]);
 
-    // Group cards by flashcard set
-    const groupedCards = cards.reduce((acc, card) => {
-      if (!acc[card.flashcardSet._id]) {
-        acc[card.flashcardSet._id] = {
-          ...card.flashcardSet.toObject(),
-          cards: []
-        };
-      }
-      acc[card.flashcardSet._id].cards.push(card);
-      return acc;
-    }, {});
+    const result = flashcardSetIds.map(id => ({
+      flashcardSetId: id,
+      cardCount: cardCounts.find(count => count._id.toString() === id)?.count || 0
+    }));
 
-    return NextResponse.json(Object.values(groupedCards));
+    return NextResponse.json(result);
   } catch (error) {
-    console.error('Error fetching cards:', error);
-    return NextResponse.json({ error: 'Failed to fetch cards' }, { status: 500 });
+    console.error('Error fetching card counts:', error);
+    return NextResponse.json({ error: 'Failed to fetch card counts' }, { status: 500 });
   }
 }
 

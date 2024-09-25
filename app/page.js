@@ -6,23 +6,53 @@ import { FaPlus, FaSearch } from 'react-icons/fa';
 import "./globals.css";
 
 async function getFlashcardSets(userId) {
-  const url = userId
+  const setsUrl = userId
     ? `./api/flashcard-sets?userId=${userId}`
     : `./api/flashcard-sets`;
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) {
+  const setsRes = await fetch(setsUrl, { cache: 'no-store' });
+  if (!setsRes.ok) {
     throw new Error('Failed to fetch flashcard sets');
   }
-  return res.json();
+  const sets = await setsRes.json();
+  
+  // Fetch card counts for these sets
+  const setIds = sets.map(set => set._id).join(',');
+  const cardCountsUrl = `./api/card?flashcardSetIds=${setIds}`;
+  const cardCountsRes = await fetch(cardCountsUrl, { cache: 'no-store' });
+  if (!cardCountsRes.ok) {
+    throw new Error('Failed to fetch card counts');
+  }
+  const cardCounts = await cardCountsRes.json();
+
+  // Merge card counts with flashcard sets
+  return sets.map(set => ({
+    ...set,
+    cardCount: cardCounts.find(count => count.flashcardSetId === set._id)?.cardCount || 0
+  }));
 }
 
 async function getPublicFlashcardSets() {
-  const url = `./api/flashcard-sets?isPublic=true`;
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) {
+  const setsUrl = `./api/flashcard-sets?isPublic=true`;
+  const setsRes = await fetch(setsUrl, { cache: 'no-store' });
+  if (!setsRes.ok) {
     throw new Error('Failed to fetch public flashcard sets');
   }
-  return res.json();
+  const sets = await setsRes.json();
+  
+  // Fetch card counts for these sets
+  const setIds = sets.map(set => set._id).join(',');
+  const cardCountsUrl = `./api/card?flashcardSetIds=${setIds}`;
+  const cardCountsRes = await fetch(cardCountsUrl, { cache: 'no-store' });
+  if (!cardCountsRes.ok) {
+    throw new Error('Failed to fetch card counts for public sets');
+  }
+  const cardCounts = await cardCountsRes.json();
+
+  // Merge card counts with flashcard sets
+  return sets.map(set => ({
+    ...set,
+    cardCount: cardCounts.find(count => count.flashcardSetId === set._id)?.cardCount || 0
+  }));
 }
 
 export default function Home() {
@@ -129,7 +159,7 @@ export default function Home() {
                         <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
                         <p className="text-gray-600 mb-3">{set.description}</p>
                         <div className="flex justify-between items-center text-sm text-gray-400">
-                          <span>{set.cards.length} cards</span>
+                          <span>{set.cardCount} cards</span>
                           <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
                         </div>
                       </div>
@@ -155,7 +185,7 @@ export default function Home() {
                         <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
                         <p className="text-gray-600 mb-3">{set.description}</p>
                         <div className="flex justify-between items-center text-sm text-gray-400">
-                          <span>{set.cards.length} cards</span>
+                          <span>{set.cardCount} cards</span>
                           <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
                         </div>
                       </div>
