@@ -65,18 +65,19 @@ export async function DELETE(request, { params }) {
   const { id } = params;
 
   try {
+    // Delete all associated cards first
+    await Card.deleteMany({ flashcardSet: id });
+
+    // Then delete the flashcard set
     const deletedSet = await FlashcardSet.findByIdAndDelete(id);
 
     if (!deletedSet) {
       return NextResponse.json({ error: 'Flashcard set not found' }, { status: 404 });
     }
 
-    // Delete associated cards
-    await Card.deleteMany({ flashcardSet: id });
-
-    return NextResponse.json({ message: 'Flashcard set deleted successfully' });
+    return NextResponse.json({ message: 'Flashcard set and associated cards deleted successfully' });
   } catch (error) {
-    console.error('Error deleting flashcard set:', error);
+    console.error('Error deleting flashcard set and cards:', error);
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }
