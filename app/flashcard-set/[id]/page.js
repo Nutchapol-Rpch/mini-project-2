@@ -18,7 +18,13 @@ async function getFlashcardSet(id) {
   }
   const cardData = await cardRes.json();
 
-  flashcardSet.cards = cardData;
+  if (cardData.length > 0) {
+    flashcardSet.cardCount = cardData[0].cardCount;
+    flashcardSet.cards = cardData[0].cards;
+  } else {
+    flashcardSet.cardCount = 0;
+    flashcardSet.cards = [];
+  }
 
   return flashcardSet;
 }
@@ -258,8 +264,8 @@ export default function FlashcardSet() {
                 Start Practice
               </button>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                {editedCards.length > 0 ? (
-                  editedCards.map((card, index) => (
+                {flashcardSet.cards && flashcardSet.cards.length > 0 ? (
+                  flashcardSet.cards.map((card, index) => (
                     <div key={index} className="border rounded-lg p-4 bg-white">
                       <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
                       <p>Definition: {card.definition}</p>

@@ -9,11 +9,30 @@ export async function GET(request) {
   const flashcardSetIds = searchParams.get('flashcardSetIds')?.split(',') || [];
 
   try {
-    const cards = await Card.find({
-      flashcardSet: { $in: flashcardSetIds.map(id => new mongoose.Types.ObjectId(id)) }
-    });
+    const cardCounts = await Card.aggregate([
+      {
+        $match: {
+          flashcardSet: { $in: flashcardSetIds.map(id => new mongoose.Types.ObjectId(id)) }
+        }
+      },
+      {
+        $group: {
+          _id: '$flashcardSet',
+          cardCount: { $sum: 1 },
+          cards: { $push: '$$ROOT' }
+        }
+      },
+      {
+        $project: {
+          flashcardSetId: '$_id',
+          cardCount: 1,
+          cards: 1,
+          _id: 0
+        }
+      }
+    ]);
 
-    return NextResponse.json(cards);
+    return NextResponse.json(cardCounts);
   } catch (error) {
     console.error('Error fetching cards:', error);
     return NextResponse.json({ error: 'Failed to fetch cards' }, { status: 500 });

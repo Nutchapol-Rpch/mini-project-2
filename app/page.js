@@ -24,10 +24,20 @@ async function getFlashcardSets(userId) {
   }
   const cardCounts = await cardCountsRes.json();
 
-  // Merge card counts with flashcard sets
+  // Create a map of flashcardSetId to cardCount and cards
+  const cardMap = cardCounts.reduce((map, item) => {
+    map[item.flashcardSetId] = {
+      cardCount: item.cardCount,
+      cards: item.cards
+    };
+    return map;
+  }, {});
+
+  // Merge card counts and cards with flashcard sets
   return sets.map(set => ({
     ...set,
-    cardCount: cardCounts.find(count => count.flashcardSetId === set._id)?.cardCount || 0
+    cardCount: cardMap[set._id]?.cardCount || 0,
+    cards: cardMap[set._id]?.cards || []
   }));
 }
 
@@ -48,10 +58,20 @@ async function getPublicFlashcardSets() {
   }
   const cardCounts = await cardCountsRes.json();
 
-  // Merge card counts with flashcard sets
+  // Create a map of flashcardSetId to cardCount and cards
+  const cardMap = cardCounts.reduce((map, item) => {
+    map[item.flashcardSetId] = {
+      cardCount: item.cardCount,
+      cards: item.cards
+    };
+    return map;
+  }, {});
+
+  // Merge card counts and cards with flashcard sets
   return sets.map(set => ({
     ...set,
-    cardCount: cardCounts.find(count => count.flashcardSetId === set._id)?.cardCount || 0
+    cardCount: cardMap[set._id]?.cardCount || 0,
+    cards: cardMap[set._id]?.cards || []
   }));
 }
 
