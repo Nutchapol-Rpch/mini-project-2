@@ -3,12 +3,7 @@ import mongoose from 'mongoose';
 const FlashcardSetSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
-  cards: [
-    {
-      term: { type: String, required: true },
-      definition: { type: String, required: true },
-    },
-  ],
+  cards: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Card' }],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   isPublic: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },

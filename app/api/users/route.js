@@ -3,6 +3,7 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcrypt';
 import FlashcardSet from '@/models/FlashcardSet';
+import Card from '@/models/Card';
 
 // Login route (Read user data model)
 export async function POST(request) {
