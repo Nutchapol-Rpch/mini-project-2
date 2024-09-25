@@ -155,7 +155,6 @@ export default function Home() {
                         <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
                         <p className="text-gray-600 mb-3">{set.description}</p>
                         <div className="flex justify-between items-center text-sm text-gray-400">
-                          <span>{set.cards.length} cards</span>
                           <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
                         </div>
                       </div>
