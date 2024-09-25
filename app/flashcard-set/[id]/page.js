@@ -226,7 +226,7 @@ export default function FlashcardSet() {
           <h1 className="text-3xl font-bold mb-4">{flashcardSet.title}</h1>
           <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
           <p className="text-lg text-gray-600 mb-6">{flashcardSet.description}</p>
-          {isOwner && (
+          {!isPracticeMode && isOwner && ( // Show buttons only if not in practice mode
             <div className="mb-6 flex justify-start space-x-4">
               <button
                 onClick={handleEdit}
@@ -241,10 +241,9 @@ export default function FlashcardSet() {
                 Delete Set
               </button>
             </div>
-
           )}
           {!isPracticeMode ? (
-            <div className>
+            <div>
               <button
                 onClick={startPractice}
                 className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 ease-in-out mb-6"
