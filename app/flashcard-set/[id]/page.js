@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext';
+import { FaShare } from 'react-icons/fa';
 
 async function getFlashcardSet(id) {
   const res = await fetch(`/api/flashcard-sets/${id}`, { cache: 'no-store' });
@@ -193,6 +194,13 @@ export default function FlashcardSet() {
     setEditedCards(newCards);
   };
 
+  const handleShare = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Link copied to clipboard!');
+    });
+  };
+
   return (
     <div className="container mx-auto px-6 py-8">
       {isEditing ? (
@@ -276,20 +284,31 @@ export default function FlashcardSet() {
           <h1 className="text-3xl font-bold mb-4">{flashcardSet.title}</h1>
           <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
           <p className="text-lg text-gray-600 mb-6">{flashcardSet.description}</p>
-          {!isPracticeMode && isOwner && ( // Show buttons only if not in practice mode
+          {!isPracticeMode && (
             <div className="mb-6 flex justify-start space-x-4">
               <button
-                onClick={handleEdit}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
+                onClick={handleShare}
+                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
+                title="Share Set"
               >
-                Edit Set
+                <FaShare size={20} />
               </button>
-              <button
-                onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
-              >
-                Delete Set
-              </button>
+              {isOwner && (
+                <>
+                  <button
+                    onClick={handleEdit}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
+                  >
+                    Edit Set
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
+                  >
+                    Delete Set
+                  </button>
+                </>
+              )}
             </div>
           )}
           {!isPracticeMode ? (

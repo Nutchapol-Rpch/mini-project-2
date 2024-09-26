@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaPlus, FaSearch } from 'react-icons/fa';
+import { FaPlus, FaSearch, FaShare } from 'react-icons/fa';
 import "./globals.css";
 
 async function getFlashcardSets(userId) {
@@ -74,6 +74,13 @@ async function getPublicFlashcardSets() {
     cards: cardMap[set._id]?.cards || []
   }));
 }
+
+const handleShare = (id) => {
+  const url = `${window.location.origin}/flashcard-set/${id}`;
+  navigator.clipboard.writeText(url).then(() => {
+    alert('Link copied to clipboard!');
+  });
+};
 
 export default function Home() {
   const [flashcardSets, setFlashcardSets] = useState([]);
@@ -191,17 +198,30 @@ export default function Home() {
               {filteredFlashcardSets.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredFlashcardSets.map((set) => (
-                    <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-                      <div className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
-                        <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
-                        <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
-                        <p className="text-gray-600 mb-3">{set.description}</p>
-                        <div className="flex justify-between items-center text-sm text-gray-400">
-                          <span>{set.cardCount} cards</span>
-                          <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
-                        </div>
+                    <div key={set._id} className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
+                      <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
+                      <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
+                      <p className="text-gray-600 mb-3">{set.description}</p>
+                      <div className="flex justify-between items-center text-sm text-gray-400">
+                        <span>{set.cardCount} cards</span>
+                        <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
                       </div>
-                    </Link>
+                      <div className="mt-3 flex justify-between items-center">
+                        <Link href={`/flashcard-set/${set._id}`} className="text-blue-500 hover:text-blue-700">
+                          View Set
+                        </Link>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleShare(set._id);
+                          }}
+                          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
+                          title="Share Set"
+                        >
+                          <FaShare size={16} />
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
