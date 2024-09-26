@@ -281,19 +281,11 @@ export default function FlashcardSet() {
         </form>
       ) : (
         <>
-          <h1 className="text-3xl font-bold mb-4">{flashcardSet.title}</h1>
-          <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
-          <p className="text-lg text-gray-600 mb-6">{flashcardSet.description}</p>
+          <h1 className="text-3xl font-bold mb-4 text-left">{flashcardSet.title}</h1>
+          <p className="text-xl text-gray-600 mb-2 text-left">Created by: {flashcardSet.createdBy.username}</p>
+          <p className="text-lg text-gray-600 mb-6 text-left">{flashcardSet.description}</p>
           {!isPracticeMode && (
             <div className="mb-6 flex justify-start items-center space-x-4">
-              {/* Share Button
-              <button
-                onClick={handleShare}
-                className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition duration-300 ease-in-out"
-                title="Share Set"
-              >
-                <FaShare size={22} />
-              </button> */}
               {isOwner && (
                 <>
                   <button
@@ -308,7 +300,6 @@ export default function FlashcardSet() {
                   >
                     Delete Set
                   </button>
-                  {/* Share Button */}
                   <button
                     onClick={handleShare}
                     className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition duration-300 ease-in-out"
@@ -334,7 +325,7 @@ export default function FlashcardSet() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {flashcardSet.cards && flashcardSet.cards.length > 0 ? (
                   flashcardSet.cards.map((card, index) => (
-                    <div key={index} className="border rounded-lg p-4 bg-white">
+                    <div key={index} className="border rounded-lg p-4 bg-white hover:shadow-xl transition-shadow duration-300">
                       <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
                       <p>Definition: {card.definition}</p>
                     </div>
@@ -348,7 +339,7 @@ export default function FlashcardSet() {
             isPracticeMode && flashcardSet.cards && flashcardSet.cards.length > 0 && (
               <div className="flex flex-col items-center">
                 <div
-                  className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center"
+                  className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center hover:shadow-xl transition-shadow duration-300"
                   onClick={flipCard}
                 >
                   <div className="text-center p-4">
@@ -391,5 +382,7 @@ export default function FlashcardSet() {
       <Link href="/" className="block mt-8 text-blue-500 hover:underline text-center">Back to Home</Link>
     </div>
   );
+
+
 
 }

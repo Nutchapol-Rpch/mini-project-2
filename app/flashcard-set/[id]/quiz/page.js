@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 async function getFlashcardSet(id) {
   const res = await fetch(`/api/flashcard-sets/${id}`, { cache: 'no-store' });
@@ -58,12 +58,12 @@ export default function Quiz() {
   const handleSubmitAnswer = () => {
     const currentCard = flashcardSet.cards[currentCardIndex];
     const isCorrect = userAnswer.toLowerCase().trim() === currentCard.definition.toLowerCase().trim();
-    
-    setAnswers([...answers, { 
-      term: currentCard.term, 
-      userAnswer, 
-      correctAnswer: currentCard.definition, 
-      isCorrect 
+
+    setAnswers([...answers, {
+      term: currentCard.term,
+      userAnswer,
+      correctAnswer: currentCard.definition,
+      isCorrect
     }]);
 
     if (isCorrect) {
