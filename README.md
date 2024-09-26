@@ -74,6 +74,7 @@ Budzdy is an interactive web application designed to help users create, study, a
 
 ## Project Structure
 
+```
 |-- app/
     |-- api/
     |   |-- flashcard-sets/
@@ -91,6 +92,7 @@ Budzdy is an interactive web application designed to help users create, study, a
     |
     |-- lib/
         |-- mongodb.js
+```
 
 ## Contributors
 
