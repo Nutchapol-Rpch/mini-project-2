@@ -53,8 +53,8 @@ Budzdy is an interactive web application designed to help users create, study, a
 2. Install dependencies:
 
    ```bash
-   cd flashlearn
-   npm install
+   cd mini-project-2
+   pnpm install
    ```
 
 3. Set up environment variables:
