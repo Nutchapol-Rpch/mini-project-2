@@ -47,9 +47,19 @@ export async function PATCH(request) {
       user.password = hashedPassword;
     }
 
+    user.lastEditedAt = new Date();
+
     await user.save();
 
-    return NextResponse.json({ message: 'Profile updated successfully', user: { _id: user._id, name: user.username, email: user.email } }, { status: 200 });
+    return NextResponse.json({
+      message: 'Profile updated successfully',
+      user: {
+        _id: user._id,
+        name: user.username,
+        email: user.email,
+        lastEditedAt: user.lastEditedAt
+      }
+    }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }

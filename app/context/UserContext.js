@@ -14,7 +14,10 @@ export const UserProvider = ({ children }) => {
           const userResponse = await fetch(`/api/users?userId=${parsedUser._id}`);
           if (userResponse.ok) {
             const userData = await userResponse.json();
-            setUser(userData.user);
+            setUser({
+              ...userData.user,
+              lastEditedAt: userData.user.lastEditedAt
+            });
             localStorage.setItem('user', JSON.stringify(userData.user));
           }
         } catch (error) {

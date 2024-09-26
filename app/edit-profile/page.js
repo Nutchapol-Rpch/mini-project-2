@@ -9,6 +9,7 @@ export default function EditProfile() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [lastEditedAt, setLastEditedAt] = useState('');
   const router = useRouter();
   const { user, setUser } = useUser();
 
@@ -16,6 +17,7 @@ export default function EditProfile() {
     if (user) {
       setUsername(user.name);
       setEmail(user.email);
+      setLastEditedAt(user.lastEditedAt ? new Date(user.lastEditedAt).toLocaleString() : 'Never');
     }
   }, [user]);
 
@@ -25,11 +27,12 @@ export default function EditProfile() {
       const response = await fetch('/api/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, lastEditedAt }),
       });
       if (response.ok) {
         const updatedUser = await response.json();
         setUser(updatedUser.user);
+        setLastEditedAt(new Date(updatedUser.user.lastEditedAt).toLocaleString());
         localStorage.setItem('user', JSON.stringify(updatedUser.user));
         router.push('/');
       } else {
@@ -67,6 +70,9 @@ export default function EditProfile() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-6 text-center">Edit Profile</h1>
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {lastEditedAt && (
+        <p className="text-gray-600 mb-4 text-center">Last edited: {lastEditedAt}</p>
+      )}
       <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
         <div className="mb-4">
           <label htmlFor="username" className="block mb-2 text-lg font-medium">Username</label>
