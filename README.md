@@ -1,16 +1,38 @@
-# FlashLearn: Interactive Flashcard Learning Platform
+# Budzdy: Interactive Flashcard Learning Platform
 
 ## Project Overview
 
-FlashLearn is an interactive web application designed to help users create, study, and master flashcards. This project was developed as part of a term project to demonstrate proficiency in modern web development technologies and practices.
+Budzdy is an interactive web application designed to help users create, study, and master flashcards. This project was developed as part of a term project to demonstrate proficiency in modern web development technologies and practices.
 
 ## Features
 
-- User authentication (login and registration)
+- Allow users to create an account and login, edit profile, and delete account
+  - CRUD operations for user model
+    - Create - Register
+    - Read - Login
+    - Update - Edit Profile page
+    - Delete - Delete Account button in Edit profile page
 - Create and manage flashcard sets
-- Study flashcards with an intuitive interface
+  - CRUD operations for flashcard sets model
+    - Create - Create New Flashcard Set
+    - Read - View Flashcard Set
+    - Update - Edit Flashcard Set
+    - Delete - Delete Flashcard Set
+  - CRUD operations for card model
+    - Create - Add Card to Flashcard Set
+    - Read - View Card in Flashcard set page
+    - Update - Edit Card in Flashcard set page
+    - Delete - Delete Card in Flashcard set page
+- Study flashcards
+  - Practice mode
+    - Flip card
+    - Next card
+    - End practice
+  - Quiz mode
+    - Quiz
+    - End quiz
 - Search functionality for flashcard sets
-- Responsive design for various devices
+- Share flashcard sets
 
 ## Technologies Used
 
@@ -23,25 +45,29 @@ FlashLearn is an interactive web application designed to help users create, stud
 ## Installation and Setup
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/flashlearn.git
+
+   ```bash
+   git clone https://github.com/Nuthchapol-Rpch/mini-project-2.git
    ```
 
 2. Install dependencies:
-   ```
+
+   ```bash
    cd flashlearn
    npm install
    ```
 
 3. Set up environment variables:
    Create a `.env.local` file in the root directory and add the following:
-   ```
+
+   ```.env
    MONGODB_URI=your_mongodb_connection_string
    ```
 
 4. Run the development server:
-   ```
-   npm run dev
+
+   ```bash
+   pnpm dev
    ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
@@ -50,22 +76,24 @@ FlashLearn is an interactive web application designed to help users create, stud
 
 - `app/`: Next.js 13 app directory
   - `api/`: API routes
+    - `flashcard-sets/`: Flashcard sets API routes
+    - `cards/`: Cards API routes
+    - `users/`: Users API routes
+    - `register/`: Register API routes
   - `components/`: Reusable React components
+    - `UserNav/`: User navigation component
   - `models/`: MongoDB schemas
+    - `flashcard-set.js`: Flashcard sets schema
+    - `card.js`: Cards schema
+    - `user.js`: Users schema
   - `lib/`: Utility functions and database connection
-- `public/`: Static assets
-
-## Future Enhancements
-
-- Implement spaced repetition algorithm for optimized learning
-- Add collaborative features for sharing flashcard sets
-- Integrate with external APIs for automatic flashcard generation
+    - `mongodb.js`: MongoDB connection
 
 ## Contributors
 
-- Nuthchapol Rodpholchoo 6511012
-- Nantiya sachdev 6511464
-- Chinnapat Premudomkit 6520238
+- Nuthchapol Rodpholchoo ([Private Repo](https://github.com/Smiffeed)) ([University Repo](https://github.com/Nuthchapol-Rpch))
+- Nantiya sachdev ([University Repo](https://github.com/Beingka-source))
+- Chinnapat Premudomkit ([University Repo](https://github.com/MrShojiChin))
 
 ## License
 
