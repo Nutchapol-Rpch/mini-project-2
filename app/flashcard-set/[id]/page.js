@@ -337,7 +337,7 @@ export default function FlashcardSet() {
             </div>
           ) : (
             isPracticeMode && flashcardSet.cards && flashcardSet.cards.length > 0 && (
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-center">
                 <div
                   className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center hover:shadow-xl transition-shadow duration-300"
                   onClick={flipCard}
@@ -379,7 +379,7 @@ export default function FlashcardSet() {
           )}
         </>
       )}
-      <Link href="/" className="block mt-8 text-blue-500 hover:underline text-left">Back to Home</Link>
+      <Link href="/" className="block mt-8 text-blue-500 hover:underline text-center">Back to Home</Link>
     </div>
   );
 

@@ -145,7 +145,6 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="container mx-auto px-6 py-8">
         {/* Header Section */}
-        {/* Header Section */}
         <header className="container mx-auto px-6 py-8 bg-white shadow-md rounded-lg">
           <div className="flex justify-between items-center">
             <div>
