@@ -319,6 +319,9 @@ export default function FlashcardSet() {
               >
                 Start Practice
               </button>
+              <Link href={`/flashcard-set/${params.id}/quiz`} className="bg-green-600 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 ease-in-out mb-6 ml-4">
+                Start Quiz
+              </Link>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 {flashcardSet.cards && flashcardSet.cards.length > 0 ? (
                   flashcardSet.cards.map((card, index) => (
