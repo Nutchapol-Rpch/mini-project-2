@@ -74,24 +74,60 @@ Budzdy is an interactive web application designed to help users create, study, a
 
 ## Project Structure
 
-```
+```text
 |-- app/
-    |-- api/
-    |   |-- flashcard-sets/
-    |   |-- cards/
-    |   |-- users/
-    |   |-- register/
-    |
-    |-- components/
-    |   |-- UserNav/
-    |
-    |-- models/
-    |   |-- flashcard-set.js
-    |   |-- card.js
-    |   |-- user.js
-    |
-    |-- lib/
-        |-- mongodb.js
+|   |-- api/
+|   |   |-- flashcard-sets/
+|   |   |   |-- [id]/
+|   |   |   |   |-- route.js
+|   |   |   |-- route.js
+|   |   |
+|   |   |-- cards/
+|   |   |   |-- route.js
+|   |   |
+|   |   |-- users/
+|   |   |   |-- route.js
+|   |   |
+|   |   |-- register/
+|   |   |   |-- route.js
+|   |
+|   |-- context/
+|   |   |-- UserContext.js
+|   |
+|   |-- create-set/
+|   |   |-- page.js
+|   |
+|   |-- edit-profile/
+|   |   |-- page.js
+|   |
+|   |-- flashcard-set/
+|   |   |-- [id]/
+|   |   |   |-- page.js
+|   |
+|   |-- login/
+|   |   |-- page.js
+|   |
+|   |-- register/
+|   |   |-- page.js
+|   |
+|   |-- flashcard-set/
+|   |   |-- [id]/
+|   |   |   |-- page.js
+|   |   |-- globals.css
+|   |   |-- layout.js
+|   |   |-- metadata.js
+|   |   |-- page.js
+|
+|-- components/
+|   |-- UserNav.js
+|
+|-- models/
+|   |-- flashcardSet.js
+|   |-- card.js
+|   |-- user.js
+|
+|-- lib/
+|   |-- mongodb.js
 ```
 
 ## Contributors
