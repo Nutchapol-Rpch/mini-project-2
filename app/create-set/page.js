@@ -23,6 +23,12 @@ export default function CreateSet() {
     setCards(newCards);
   };
 
+  const handleRemoveCard = (index) => {
+    const newCards = [...cards];
+    newCards.splice(index, 1);
+    setCards(newCards);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user || !user._id) {
@@ -110,29 +116,28 @@ export default function CreateSet() {
         </div>
         <h2 className="text-2xl font-bold mb-4">Cards</h2>
         {cards.map((card, index) => (
-          <div key={index} className="mb-4 p-4 border rounded-lg">
-            <div className="mb-2">
-              <label htmlFor={`term-${index}`} className="block mb-1">Term</label>
-              <input
-                type="text"
-                id={`term-${index}`}
-                value={card.term}
-                onChange={(e) => handleCardChange(index, 'term', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor={`definition-${index}`} className="block mb-1">Definition</label>
-              <input
-                type="text"
-                id={`definition-${index}`}
-                value={card.definition}
-                onChange={(e) => handleCardChange(index, 'definition', e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg"
-                required
-              />
-            </div>
+          <div key={index} className="mb-4 flex items-center">
+            <input
+              type="text"
+              value={card.term}
+              onChange={(e) => handleCardChange(index, 'term', e.target.value)}
+              placeholder="Term"
+              className="border rounded p-2 mr-2 flex-1"
+            />
+            <input
+              type="text"
+              value={card.definition}
+              onChange={(e) => handleCardChange(index, 'definition', e.target.value)}
+              placeholder="Definition"
+              className="border rounded p-2 mr-2 flex-1"
+            />
+            <button
+              type="button"
+              onClick={() => handleRemoveCard(index)}
+              className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            >
+              Remove
+            </button>
           </div>
         ))}
         <button
