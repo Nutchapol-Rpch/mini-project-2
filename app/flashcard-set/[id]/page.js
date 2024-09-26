@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useUser } from '../../context/UserContext';
 import { FaShare } from 'react-icons/fa';
+import { useUser } from '../../context/UserContext';
 
 async function getFlashcardSet(id) {
   const res = await fetch(`/api/flashcard-sets/${id}`, { cache: 'no-store' });
@@ -285,14 +285,15 @@ export default function FlashcardSet() {
           <p className="text-xl text-gray-600 mb-2">Created by: {flashcardSet.createdBy.username}</p>
           <p className="text-lg text-gray-600 mb-6">{flashcardSet.description}</p>
           {!isPracticeMode && (
-            <div className="mb-6 flex justify-start space-x-4">
+            <div className="mb-6 flex justify-start items-center space-x-4">
+              {/* Share Button
               <button
                 onClick={handleShare}
-                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
+                className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition duration-300 ease-in-out"
                 title="Share Set"
               >
-                <FaShare size={20} />
-              </button>
+                <FaShare size={22} />
+              </button> */}
               {isOwner && (
                 <>
                   <button
@@ -306,6 +307,14 @@ export default function FlashcardSet() {
                     className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-5 rounded-lg shadow transition duration-300 ease-in-out"
                   >
                     Delete Set
+                  </button>
+                  {/* Share Button */}
+                  <button
+                    onClick={handleShare}
+                    className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg transition duration-300 ease-in-out"
+                    title="Share Set"
+                  >
+                    <FaShare size={22} />
                   </button>
                 </>
               )}
@@ -335,20 +344,20 @@ export default function FlashcardSet() {
           ) : (
             isPracticeMode && flashcardSet.cards && flashcardSet.cards.length > 0 && (
               <div className="flex flex-col items-center">
-                <div 
+                <div
                   className="w-96 h-60 bg-white shadow-lg rounded-lg cursor-pointer mb-4 flex items-center justify-center"
                   onClick={flipCard}
                 >
                   <div className="text-center p-4">
-                    {isFlipped 
+                    {isFlipped
                       ? flashcardSet.cards[currentCardIndex].definition
                       : flashcardSet.cards[currentCardIndex].term
                     }
                   </div>
                 </div>
                 <div className="flex justify-between w-96">
-                  <button 
-                    onClick={prevCard} 
+                  <button
+                    onClick={prevCard}
                     disabled={currentCardIndex === 0}
                     className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
                   >
@@ -357,7 +366,7 @@ export default function FlashcardSet() {
                   <span className="py-2">
                     {currentCardIndex + 1} / {flashcardSet.cards.length}
                   </span>
-                  <button 
+                  <button
                     onClick={nextCard}
                     disabled={currentCardIndex === flashcardSet.cards.length - 1}
                     className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
@@ -365,12 +374,12 @@ export default function FlashcardSet() {
                     Next
                   </button>
                 </div>
-              <button
-                onClick={() => setIsPracticeMode(false)}
-                className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out"
-              >
-                End Practice
-              </button>
+                <button
+                  onClick={() => setIsPracticeMode(false)}
+                  className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out"
+                >
+                  End Practice
+                </button>
               </div>
             )
           )}

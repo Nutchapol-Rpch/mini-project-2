@@ -14,7 +14,7 @@ async function getFlashcardSets(userId) {
     throw new Error('Failed to fetch flashcard sets');
   }
   const sets = await setsRes.json();
-  
+
   // Fetch card counts for these sets
   const setIds = sets.map(set => set._id).join(',');
   const cardCountsUrl = `./api/card?flashcardSetIds=${setIds}`;
@@ -48,7 +48,7 @@ async function getPublicFlashcardSets() {
     throw new Error('Failed to fetch public flashcard sets');
   }
   const sets = await setsRes.json();
-  
+
   // Fetch card counts for these sets
   const setIds = sets.map(set => set._id).join(',');
   const cardCountsUrl = `./api/card?flashcardSetIds=${setIds}`;
@@ -110,7 +110,7 @@ export default function Home() {
         console.error(error);
       }
       setIsLoading(false);
-      
+
       // Clear the update flag
       localStorage.removeItem('flashcardSetUpdated');
     };
@@ -198,29 +198,40 @@ export default function Home() {
               {filteredFlashcardSets.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredFlashcardSets.map((set) => (
-                    <div key={set._id} className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
+                    <div
+                      key={set._id}
+                      className="relative border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white"
+                    >
+                      {/* Share button moved to the top-right */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleShare(set._id);
+                        }}
+                        className="absolute top-3 right-3 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
+                        title="Share Set"
+                      >
+                        <FaShare size={16} />
+                      </button>
+
+                      {/* Card content */}
                       <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
                       <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
                       <p className="text-gray-600 mb-3">{set.description}</p>
+
+                      {/* Card details */}
                       <div className="flex justify-between items-center text-sm text-gray-400">
                         <span>{set.cardCount} cards</span>
                         <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
                       </div>
-                      <div className="mt-3 flex justify-between items-center">
+
+                      {/* Replace the "View Set" with the share button */}
+                      <div className="mt-3 text-right">
                         <Link href={`/flashcard-set/${set._id}`} className="text-blue-500 hover:text-blue-700">
                           View Set
                         </Link>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleShare(set._id);
-                          }}
-                          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
-                          title="Share Set"
-                        >
-                          <FaShare size={16} />
-                        </button>
                       </div>
+
                     </div>
                   ))}
                 </div>
@@ -230,6 +241,7 @@ export default function Home() {
                 </div>
               )}
             </section>
+
 
             {/* Public Flashcard Sets */}
             <section className="mt-10">
