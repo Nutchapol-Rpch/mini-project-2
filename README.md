@@ -79,40 +79,29 @@ Budzdy is an interactive web application designed to help users create, study, a
 |   |-- api/
 |   |   |-- flashcard-sets/
 |   |   |   |-- [id]/
-|   |   |   |   |-- route.js
-|   |   |   |-- route.js
 |   |   |
 |   |   |-- cards/
-|   |   |   |-- route.js
 |   |   |
 |   |   |-- users/
-|   |   |   |-- route.js
 |   |   |
 |   |   |-- register/
-|   |   |   |-- route.js
 |   |
 |   |-- context/
 |   |   |-- UserContext.js
 |   |
 |   |-- create-set/
-|   |   |-- page.js
 |   |
 |   |-- edit-profile/
-|   |   |-- page.js
 |   |
 |   |-- flashcard-set/
 |   |   |-- [id]/
-|   |   |   |-- page.js
 |   |
 |   |-- login/
-|   |   |-- page.js
 |   |
 |   |-- register/
-|   |   |-- page.js
 |   |
 |   |-- flashcard-set/
 |   |   |-- [id]/
-|   |   |   |-- page.js
 |   |   |-- globals.css
 |   |   |-- layout.js
 |   |   |-- metadata.js
