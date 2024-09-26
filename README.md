@@ -74,20 +74,23 @@ Budzdy is an interactive web application designed to help users create, study, a
 
 ## Project Structure
 
-- `app/`: Next.js 13 app directory
-  - `api/`: API routes
-    - `flashcard-sets/`: Flashcard sets API routes
-    - `cards/`: Cards API routes
-    - `users/`: Users API routes
-    - `register/`: Register API routes
-  - `components/`: Reusable React components
-    - `UserNav/`: User navigation component
-  - `models/`: MongoDB schemas
-    - `flashcard-set.js`: Flashcard sets schema
-    - `card.js`: Cards schema
-    - `user.js`: Users schema
-  - `lib/`: Utility functions and database connection
-    - `mongodb.js`: MongoDB connection
+|-- app/
+    |-- api/
+    |   |-- flashcard-sets/
+    |   |-- cards/
+    |   |-- users/
+    |   |-- register/
+    |
+    |-- components/
+    |   |-- UserNav/
+    |
+    |-- models/
+    |   |-- flashcard-set.js
+    |   |-- card.js
+    |   |-- user.js
+    |
+    |-- lib/
+        |-- mongodb.js
 
 ## Contributors
 
