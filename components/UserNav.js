@@ -25,14 +25,20 @@ export default function UserNav() {
         <>
           <button onClick={toggleDropdown} className="flex items-center focus:outline-none text-white">
             {user.profilePicture ? (
-              <Image
-                src={user.profilePicture}
-                alt="Profile"
-                width={32}
-                height={32}
-                className="rounded-full mr-2"
-                unoptimized
-              />
+              <>
+                {console.log('Profile picture URL:', user.profilePicture)}
+                <Image
+                  src={user.profilePicture}
+                  alt="Profile"
+                  width={32}
+                  height={32}
+                  className="rounded-full mr-2"
+                  onError={(e) => {
+                    console.error('Error loading profile picture:', e);
+                    e.target.src = '/default-avatar.png'; // Provide a default avatar image
+                  }}
+                />
+              </>
             ) : (
               <svg className="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />

@@ -16,7 +16,13 @@ export const UserProvider = ({ children }) => {
             const userResponse = await fetch(`/api/users?userId=${parsedUser._id}`);
             if (userResponse.ok) {
               const userData = await userResponse.json();
+              console.log('Fetched user data:', userData);
               setUser({
+                ...userData.user,
+                lastEditedAt: userData.user.lastEditedAt,
+                profilePicture: userData.user.profilePicture
+              });
+              console.log('Set user state:', {
                 ...userData.user,
                 lastEditedAt: userData.user.lastEditedAt,
                 profilePicture: userData.user.profilePicture

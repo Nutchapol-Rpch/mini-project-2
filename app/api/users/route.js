@@ -110,7 +110,14 @@ export async function GET(request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ user: { _id: user._id, name: user.username, email: user.email } }, { status: 200 });
+    return NextResponse.json({
+      user: {
+        _id: user._id,
+        name: user.username,
+        email: user.email,
+        profilePicture: user.profilePicture
+      }
+    }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
