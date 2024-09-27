@@ -115,7 +115,8 @@ export async function GET(request) {
         _id: user._id,
         name: user.username,
         email: user.email,
-        profilePicture: user.profilePicture
+        profilePicture: user.profilePicture,
+        lastEditedAt: user.lastEditedAt
       }
     }, { status: 200 });
   } catch (error) {
