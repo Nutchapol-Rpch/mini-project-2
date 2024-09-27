@@ -90,99 +90,75 @@ export default function EditProfile() {
       {lastEditedAt && (
         <p className="text-gray-500 text-sm text-center mb-6">Last edited: {lastEditedAt}</p>
       )}
-      <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
-        <div className="mb-4 text-center">
-          <div className="w-24 h-24 mx-auto rounded-full overflow-hidden">
-            {previewUrl ? (
-              <Image
-                src={previewUrl}
-                alt="Profile"
-                width={100}
-                height={100}
-                className="object-cover w-full h-full"
-                unoptimized
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <span className="text-4xl text-gray-500">?</span>
-              </div>
-            )}
+      <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white shadow-xl rounded-lg p-8">
+        <div className="mb-6 text-center">
+          {previewUrl ? (
+            <Image
+              src={previewUrl}
+              alt="Profile"
+              width={120}
+              height={120}
+              className="rounded-full mx-auto shadow-md"
+              unoptimized
+            />
+          ) : (
+            <div className="w-28 h-28 bg-gray-200 rounded-full mx-auto flex items-center justify-center">
+              <span className="text-5xl text-gray-500">?</span>
+            </div>
+          )}
+          <div className="flex justify-center items-center mt-6">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block max-w-xs text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
           </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="mt-2"
-          />
-          <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white shadow-xl rounded-lg p-8">
-            <div className="mb-6 text-center">
-              {previewUrl ? (
-                <Image
-                  src={previewUrl}
-                  alt="Profile"
-                  width={120}
-                  height={120}
-                  className="rounded-full mx-auto shadow-md"
-                  unoptimized
-                />
-              ) : (
-                <div className="w-28 h-28 bg-gray-200 rounded-full mx-auto flex items-center justify-center">
-                  <span className="text-5xl text-gray-500">?</span>
-                </div>
-              )}
-              <div className="flex justify-center items-center mt-6">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="block max-w-xs text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-              </div>
-            </div>
-            <div className="mb-6">
-              <label htmlFor="username" className="block mb-3 text-lg font-semibold text-gray-700">Username</label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label htmlFor="email" className="block mb-3 text-lg font-semibold text-gray-700">Email</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label htmlFor="password" className="block mb-3 text-lg font-semibold text-gray-700">New Password <span className="text-sm text-gray-500">(leave blank to keep current)</span></label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-              />
-            </div>
-            <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 shadow-md">
-              Update Profile
-            </button>
-            <button
-              type="button"
-              onClick={handleDeleteAccount}
-              className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-200 shadow-md mt-5"
-            >
-              Delete Account
-            </button>
-          </form>
         </div>
-        );
+        <div className="mb-6">
+          <label htmlFor="username" className="block mb-3 text-lg font-semibold text-gray-700">Username</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label htmlFor="email" className="block mb-3 text-lg font-semibold text-gray-700">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label htmlFor="password" className="block mb-3 text-lg font-semibold text-gray-700">New Password <span className="text-sm text-gray-500">(leave blank to keep current)</span></label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          />
+        </div>
+        <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 shadow-md">
+          Update Profile
+        </button>
+        <button
+          type="button"
+          onClick={handleDeleteAccount}
+          className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 transition duration-200 shadow-md mt-5"
+        >
+          Delete Account
+        </button>
+      </form>
+    </div>
+  );
 
 }
