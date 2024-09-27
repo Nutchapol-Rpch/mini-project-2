@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcrypt';
-import FlashcardSet from '@/models/FlashcardSet';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 
 // Login route (Read user data model)
 export async function POST(request) {
@@ -31,7 +32,11 @@ export async function POST(request) {
 // Update profile route (Update user data model)
 export async function PATCH(request) {
   await dbConnect();
-  const { username, email, password } = await request.json();
+  const formData = await request.formData();
+  const email = formData.get('email');
+  const username = formData.get('username');
+  const password = formData.get('password');
+  const profilePicture = formData.get('profilePicture');
 
   try {
     const user = await User.findOne({ email });
@@ -47,6 +52,15 @@ export async function PATCH(request) {
       user.password = hashedPassword;
     }
 
+    if (profilePicture) {
+      const bytes = await profilePicture.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const filename = `${user._id}-${Date.now()}${path.extname(profilePicture.name)}`;
+      const filepath = path.join(process.cwd(), 'public', 'uploads', filename);
+      await writeFile(filepath, buffer);
+      user.profilePicture = `/uploads/${filename}`;
+    }
+
     user.lastEditedAt = new Date();
 
     await user.save();
@@ -57,10 +71,12 @@ export async function PATCH(request) {
         _id: user._id,
         name: user.username,
         email: user.email,
+        profilePicture: user.profilePicture,
         lastEditedAt: user.lastEditedAt
       }
     }, { status: 200 });
   } catch (error) {
+    console.error('Error updating user:', error);
     return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }

@@ -16,7 +16,8 @@ export const UserProvider = ({ children }) => {
             const userData = await userResponse.json();
             setUser({
               ...userData.user,
-              lastEditedAt: userData.user.lastEditedAt
+              lastEditedAt: userData.user.lastEditedAt,
+              profilePicture: userData.user.profilePicture
             });
             localStorage.setItem('user', JSON.stringify(userData.user));
           }

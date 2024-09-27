@@ -3,11 +3,14 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useUser } from '../context/UserContext';
+import Image from 'next/image';
 
 export default function EditProfile() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
   const [error, setError] = useState('');
   const [lastEditedAt, setLastEditedAt] = useState('');
   const router = useRouter();
@@ -17,17 +20,31 @@ export default function EditProfile() {
     if (user) {
       setUsername(user.name);
       setEmail(user.email);
+      setPreviewUrl(user.profilePicture || '');
       setLastEditedAt(user.lastEditedAt ? new Date(user.lastEditedAt).toLocaleString() : 'Never');
     }
   }, [user]);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfilePicture(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('email', email);
+    if (password) formData.append('password', password);
+    if (profilePicture) formData.append('profilePicture', profilePicture);
+
     try {
       const response = await fetch('/api/users', {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, lastEditedAt }),
+        body: formData,
       });
       if (response.ok) {
         const updatedUser = await response.json();
@@ -74,6 +91,27 @@ export default function EditProfile() {
         <p className="text-gray-600 mb-4 text-center">Last edited: {lastEditedAt}</p>
       )}
       <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
+        <div className="mb-4 text-center">
+          {previewUrl ? (
+            <Image
+              src={previewUrl}
+              alt="Profile"
+              width={100}
+              height={100}
+              className="rounded-full mx-auto"
+            />
+          ) : (
+            <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto flex items-center justify-center">
+              <span className="text-4xl text-gray-500">?</span>
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="mt-2"
+          />
+        </div>
         <div className="mb-4">
           <label htmlFor="username" className="block mb-2 text-lg font-medium">Username</label>
           <input
@@ -119,5 +157,4 @@ export default function EditProfile() {
       </form>
     </div>
   );
-
 }
