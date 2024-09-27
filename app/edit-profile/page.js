@@ -91,29 +91,29 @@ export default function EditProfile() {
         <p className="text-gray-500 text-sm text-center mb-6">Last edited: {lastEditedAt}</p>
       )}
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white shadow-xl rounded-lg p-8">
-        <div className="mb-6 text-center">
-          {previewUrl ? (
-            <Image
-              src={previewUrl}
-              alt="Profile"
-              width={120}
-              height={120}
-              className="rounded-full mx-auto shadow-md"
-              unoptimized
-            />
-          ) : (
-            <div className="w-28 h-28 bg-gray-200 rounded-full mx-auto flex items-center justify-center">
-              <span className="text-5xl text-gray-500">?</span>
-            </div>
-          )}
-          <div className="flex justify-center items-center mt-6">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="block max-w-xs text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
+        <div className="mb-4 text-center">
+          <div className="w-24 h-24 mx-auto rounded-full overflow-hidden">
+            {previewUrl ? (
+              <Image
+                src={previewUrl}
+                alt="Profile"
+                width={100}
+                height={100}
+                className="object-cover w-full h-full"
+                unoptimized
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span className="text-4xl text-gray-500">?</span>
+              </div>
+            )}
           </div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="mt-2"
+          />
         </div>
         <div className="mb-6">
           <label htmlFor="username" className="block mb-3 text-lg font-semibold text-gray-700">Username</label>
