@@ -88,54 +88,76 @@ export default function Quiz() {
 
   return (
     <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-4">{flashcardSet.title} - Quiz</h1>
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-6">
+        {flashcardSet.title} - Quiz
+      </h1>
       {!quizCompleted ? (
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white shadow-lg rounded-xl p-8 transition transform hover:scale-105">
+          <h2 className="text-2xl font-semibold text-indigo-700 mb-4">
             Question {currentCardIndex + 1} of {flashcardSet.cards.length}
           </h2>
-          <p className="text-lg mb-4">{flashcardSet.cards[currentCardIndex].term}</p>
+          <p className="text-lg text-gray-700 mb-6">
+            {flashcardSet.cards[currentCardIndex].term}
+          </p>
           <input
             type="text"
             value={userAnswer}
             onChange={(e) => setUserAnswer(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg mb-4"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             placeholder="Type your answer here"
           />
           <button
             onClick={handleSubmitAnswer}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            className="bg-indigo-500 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-600 transition"
           >
             Submit Answer
           </button>
         </div>
       ) : (
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4">Quiz Completed!</h2>
-          <p className="text-lg mb-4">
+        <div className="bg-white shadow-lg rounded-xl p-8">
+          <h2 className="text-3xl font-semibold text-green-700 mb-4">
+            Quiz Completed!
+          </h2>
+          <p className="text-lg text-gray-700 mb-6">
             Your score: {score} out of {flashcardSet.cards.length}
           </p>
-          <h3 className="text-xl font-semibold mb-2">Review:</h3>
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Review:</h3>
           {answers.map((answer, index) => (
-            <div key={index} className={`mb-4 p-4 rounded-lg ${answer.isCorrect ? 'bg-green-100' : 'bg-red-100'}`}>
-              <p className="font-semibold">{answer.term}</p>
-              <p>Your answer: {answer.userAnswer}</p>
+            <div
+              key={index}
+              className={`mb-6 p-4 rounded-lg shadow ${answer.isCorrect ? 'bg-green-100' : 'bg-red-100'
+                }`}
+            >
+              <p className="font-semibold text-gray-800">
+                {answer.term}
+              </p>
+              <p className="text-gray-600">
+                Your answer: {answer.userAnswer}
+              </p>
               {!answer.isCorrect && (
-                <p className="text-green-700">Correct answer: {answer.correctAnswer}</p>
+                <p className="text-green-600">
+                  Correct answer: {answer.correctAnswer}
+                </p>
               )}
             </div>
           ))}
-          <button
-            onClick={restartQuiz}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 mr-4"
-          >
-            Restart Quiz
-          </button>
-          <Link href={`/flashcard-set/${params.id}`} className="text-blue-500 hover:underline">
-            Back to Flashcard Set
-          </Link>
+          <div className="flex gap-4">
+            <button
+              onClick={restartQuiz}
+              className="bg-indigo-500 text-white px-6 py-3 rounded-lg hover:bg-indigo-600 transition"
+            >
+              Restart Quiz
+            </button>
+            <Link
+              href={`/flashcard-set/${params.id}`}
+              className="text-indigo-500 hover:underline self-center"
+            >
+              Back to Flashcard Set
+            </Link>
+          </div>
         </div>
       )}
     </div>
   );
+
 }
