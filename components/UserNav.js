@@ -31,6 +31,7 @@ export default function UserNav() {
                 width={32}
                 height={32}
                 className="rounded-full mr-2"
+                unoptimized
               />
             ) : (
               <svg className="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">

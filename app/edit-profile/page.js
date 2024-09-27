@@ -99,6 +99,7 @@ export default function EditProfile() {
               width={100}
               height={100}
               className="rounded-full mx-auto"
+              unoptimized
             />
           ) : (
             <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto flex items-center justify-center">

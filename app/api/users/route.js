@@ -4,6 +4,8 @@ import User from '@/models/User';
 import bcrypt from 'bcrypt';
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import cloudinary from '@/lib/cloudinary';
+import { Readable } from 'stream';
 
 // Login route (Read user data model)
 export async function POST(request) {
@@ -53,12 +55,22 @@ export async function PATCH(request) {
     }
 
     if (profilePicture) {
-      const bytes = await profilePicture.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const filename = `${user._id}-${Date.now()}${path.extname(profilePicture.name)}`;
-      const filepath = path.join(process.cwd(), 'public', 'uploads', filename);
-      await writeFile(filepath, buffer);
-      user.profilePicture = `/uploads/${filename}`;
+      const buffer = Buffer.from(await profilePicture.arrayBuffer());
+      const stream = Readable.from(buffer);
+
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: 'profile_pictures' },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        stream.pipe(uploadStream);
+      });
+
+      user.profilePicture = result.secure_url;
     }
 
     user.lastEditedAt = new Date();
