@@ -1,6 +1,7 @@
 "use client";
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useUser } from '../context/UserContext';
@@ -160,6 +161,9 @@ export default function EditProfile() {
           Delete Account
         </button>
       </form>
+        <Link href="/" className="block mt-8 text-center text-blue-500 hover:underline">
+        Back to Home
+      </Link>
     </div>
   );
 

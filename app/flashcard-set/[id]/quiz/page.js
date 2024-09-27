@@ -157,6 +157,9 @@ export default function Quiz() {
           </div>
         </div>
       )}
+      <Link href="/" className="block mt-8 text-center text-blue-500 hover:underline">
+        Back to Home
+      </Link>
     </div>
   );
 
