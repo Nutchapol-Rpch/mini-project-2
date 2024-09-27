@@ -92,20 +92,22 @@ export default function EditProfile() {
       )}
       <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
         <div className="mb-4 text-center">
-          {previewUrl ? (
-            <Image
-              src={previewUrl}
-              alt="Profile"
-              width={100}
-              height={100}
-              className="rounded-full mx-auto"
-              unoptimized
-            />
-          ) : (
-            <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto flex items-center justify-center">
-              <span className="text-4xl text-gray-500">?</span>
-            </div>
-          )}
+          <div className="w-24 h-24 mx-auto rounded-full overflow-hidden">
+            {previewUrl ? (
+              <Image
+                src={previewUrl}
+                alt="Profile"
+                width={100}
+                height={100}
+                className="object-cover w-full h-full"
+                unoptimized
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span className="text-4xl text-gray-500">?</span>
+              </div>
+            )}
+          </div>
           <input
             type="file"
             accept="image/*"
