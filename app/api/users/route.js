@@ -55,6 +55,12 @@ export async function PATCH(request) {
     }
 
     if (profilePicture) {
+      // Delete the old profile picture if it exists
+      if (user.profilePicture) {
+        const oldPublicId = user.profilePicture.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(oldPublicId);
+      }
+
       const buffer = Buffer.from(await profilePicture.arrayBuffer());
       const stream = Readable.from(buffer);
 
