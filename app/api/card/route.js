@@ -50,6 +50,7 @@ export async function POST(request) {
     const newCard = new Card({
       term: data.term,
       definition: data.definition,
+      reference: data.reference,
       flashcardSet: data.flashcardSetId,
     });
 
@@ -87,26 +88,29 @@ export async function DELETE(request) {
 // Update Card data model
 export async function PUT(request) {
   await dbConnect();
-  const { flashcardSetId, cards } = await request.json();
+  const data = await request.json();
 
   try {
+    // Delete existing cards for the flashcard set
+    await Card.deleteMany({ flashcardSet: data.flashcardSetId });
+
     // Create new cards
     const newCards = await Card.insertMany(
-      cards.map(card => ({
+      data.cards.map(card => ({
         ...card,
-        flashcardSet: flashcardSetId
+        flashcardSet: data.flashcardSetId
       }))
     );
 
-    // Update the FlashcardSet with new card references
+    // Update the FlashcardSet with new card IDs
     await FlashcardSet.findByIdAndUpdate(
-      flashcardSetId,
+      data.flashcardSetId,
       { $set: { cards: newCards.map(card => card._id) } }
     );
 
     return NextResponse.json({ message: 'Cards updated successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error updating cards:', error);
-    return NextResponse.json({ error: error.message || 'Failed to update cards' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update cards' }, { status: 500 });
   }
 }

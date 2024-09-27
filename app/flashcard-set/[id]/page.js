@@ -94,7 +94,7 @@ export default function FlashcardSet() {
   const handleDelete = async () => {
     if (confirm('Are you sure you want to delete this flashcard set?')) {
       try {
-        const res = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
+        const res = await fetch(`/api/flashcard-sets/${params.id}`, {
           method: 'DELETE',
         });
         if (res.ok) {
@@ -123,7 +123,7 @@ export default function FlashcardSet() {
     e.preventDefault();
     try {
       // Update flashcard set
-      const setRes = await fetch(`http://localhost:3000/api/flashcard-sets/${params.id}`, {
+      const setRes = await fetch(`/api/flashcard-sets/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -138,7 +138,7 @@ export default function FlashcardSet() {
       }
 
       // Delete existing cards
-      const deleteRes = await fetch(`http://localhost:3000/api/card`, {
+      const deleteRes = await fetch(`/api/card`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,7 +151,7 @@ export default function FlashcardSet() {
       }
 
       // Create new cards
-      const cardRes = await fetch(`http://localhost:3000/api/card`, {
+      const cardRes = await fetch(`/api/card`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -185,7 +185,7 @@ export default function FlashcardSet() {
   };
 
   const handleAddCard = () => {
-    setEditedCards([...editedCards, { term: '', definition: '' }]);
+    setEditedCards([...editedCards, { term: '', definition: '', reference: '' }]);
   };
 
   const handleRemoveCard = (index) => {
@@ -242,8 +242,15 @@ export default function FlashcardSet() {
               <textarea
                 value={card.definition}
                 onChange={(e) => handleCardChange(index, 'definition', e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                className="w-full mb-2 border border-gray-300 rounded-lg px-3 py-2"
                 placeholder="Definition"
+              />
+              <input
+                type="text"
+                value={card.reference}
+                onChange={(e) => handleCardChange(index, 'reference', e.target.value)}
+                className="w-full mb-2 border border-gray-300 rounded-lg px-3 py-2"
+                placeholder="Reference (Media URL)"
               />
               <button
                 type="button"
@@ -328,6 +335,9 @@ export default function FlashcardSet() {
                     <div key={index} className="border rounded-lg p-4 bg-white hover:shadow-xl transition-shadow duration-300">
                       <h3 className="text-lg font-semibold mb-2">Term: {card.term}</h3>
                       <p>Definition: {card.definition}</p>
+                      {card.reference && (
+                        <p>Reference: <a href={card.reference} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{card.reference}</a></p>
+                      )}
                     </div>
                   ))
                 ) : (
@@ -349,6 +359,18 @@ export default function FlashcardSet() {
                     }
                   </div>
                 </div>
+                {flashcardSet.cards[currentCardIndex].reference && (
+                  <div className="mb-4 text-center">
+                    <a 
+                      href={flashcardSet.cards[currentCardIndex].reference} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-blue-500 hover:underline"
+                    >
+                      Reference Link
+                    </a>
+                  </div>
+                )}
                 <div className="flex justify-between w-96">
                   <button
                     onClick={prevCard}

@@ -8,13 +8,13 @@ import { useUser } from '../context/UserContext';
 export default function CreateSet() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [cards, setCards] = useState([{ term: '', definition: '' }]);
+  const [cards, setCards] = useState([{ term: '', definition: '', reference: '' }]);
   const [isPublic, setIsPublic] = useState(false);
   const router = useRouter();
   const { user } = useUser();
 
   const handleAddCard = () => {
-    setCards([...cards, { term: '', definition: '' }]);
+    setCards([...cards, { term: '', definition: '', reference: '' }]);
   };
 
   const handleCardChange = (index, field, value) => {
@@ -60,6 +60,7 @@ export default function CreateSet() {
             body: JSON.stringify({
               term: card.term,
               definition: card.definition,
+              reference: card.reference,
               flashcardSetId: createdSet._id
             }),
           })
@@ -127,20 +128,27 @@ export default function CreateSet() {
         {/* Flashcard Inputs */}
         <h2 className="text-2xl font-semibold text-gray-800 mt-8">Flashcards</h2>
         {cards.map((card, index) => (
-          <div key={index} className="flex items-center space-x-4 mb-4">
+          <div key={index} className="flex flex-col space-y-4 mb-4">
             <input
               type="text"
               value={card.term}
               onChange={(e) => handleCardChange(index, 'term', e.target.value)}
               placeholder="Term"
-              className="w-1/2 px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             <input
               type="text"
               value={card.definition}
               onChange={(e) => handleCardChange(index, 'definition', e.target.value)}
               placeholder="Definition"
-              className="w-1/2 px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
+            <input
+              type="text"
+              value={card.reference}
+              onChange={(e) => handleCardChange(index, 'reference', e.target.value)}
+              placeholder="Reference (Media URL)"
+              className="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
             <button
               type="button"
