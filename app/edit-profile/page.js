@@ -108,12 +108,14 @@ export default function EditProfile() {
               </div>
             )}
           </div>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="mt-2"
-          />
+          <div className="flex justify-center items-center mt-6">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block max-w-xs text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+          </div>
         </div>
         <div className="mb-6">
           <label htmlFor="username" className="block mb-3 text-lg font-semibold text-gray-700">Username</label>
