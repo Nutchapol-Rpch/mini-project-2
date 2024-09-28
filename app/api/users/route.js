@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import bcrypt from 'bcrypt';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 import cloudinary from '@/lib/cloudinary';
 import { Readable } from 'stream';
 
