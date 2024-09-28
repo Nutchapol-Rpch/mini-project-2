@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import FlashcardSet from '@/models/FlashcardSet';
 import Card from '@/models/Card';
+import User from '@/models/User';
 
 // Read FlashcardSet data model
 export async function GET(request) {

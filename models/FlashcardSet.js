@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import User from './User';
+
+const { Schema } = mongoose;
 
 const FlashcardSetSchema = new mongoose.Schema({
   title: { type: String, required: true },
