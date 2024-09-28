@@ -7,26 +7,17 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      // Check if window is defined to ensure we're on the client side
       if (typeof window !== 'undefined') {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser); // Set the user immediately from localStorage
+
           try {
             const userResponse = await fetch(`/api/users?userId=${parsedUser._id}`);
             if (userResponse.ok) {
               const userData = await userResponse.json();
-              console.log('Fetched user data:', userData);
-              setUser({
-                ...userData.user,
-                lastEditedAt: userData.user.lastEditedAt,
-                profilePicture: userData.user.profilePicture
-              });
-              console.log('Set user state:', {
-                ...userData.user,
-                lastEditedAt: userData.user.lastEditedAt,
-                profilePicture: userData.user.profilePicture
-              });
+              setUser(userData.user);
               localStorage.setItem('user', JSON.stringify(userData.user));
             }
           } catch (error) {

@@ -24,6 +24,15 @@ export default function Login() {
         const data = await response.json();
         localStorage.setItem('user', JSON.stringify(data.user));
         setUser(data.user); // Update user context
+
+        // Fetch full user data including profile picture
+        const userResponse = await fetch(`/api/users?userId=${data.user._id}`);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          setUser(userData.user); // Update user context with full user data
+          localStorage.setItem('user', JSON.stringify(userData.user));
+        }
+
         router.push('/');
       } else {
         const data = await response.json();

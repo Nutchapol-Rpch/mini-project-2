@@ -43,7 +43,7 @@ export default function UserNav() {
                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
               </svg>
             )}
-            <span className="mr-2">{user.name}</span>
+            <span className="mr-2">{user.name || 'User'}</span>
             <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
               <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
             </svg>
