@@ -156,7 +156,7 @@ Youtube Video: [Budzdy](https://www.youtube.com/watch?v=iGq_3xEFq9w)
 
 ## Contributors
 
-- Nutchapol Rodpholchoo ([Private Repo](https://github.com/Smiffeed)) ([University Repo](https://github.com/Nuthchapol-Rpch))
+- Nutchapol Rodpholchoo (Personal Repo](https://github.com/Smiffeed)) ([University Repo](https://github.com/Nuthchapol-Rpch))
 - Nantiya sachdev ([University Repo](https://github.com/Beingka-source))
 - Chinnapat Premudomkit ([University Repo](https://github.com/MrShojiChin))
 
