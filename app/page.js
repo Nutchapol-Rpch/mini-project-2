@@ -41,6 +41,7 @@ async function getFlashcardSets(userId) {
   }));
 }
 
+
 async function getPublicFlashcardSets() {
   const setsUrl = `./api/flashcard-sets?isPublic=true`;
   const setsRes = await fetch(setsUrl, { cache: 'no-store' });
@@ -143,7 +144,7 @@ export default function Home() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-8 mb-auto">
         {/* Header Section */}
         <header className="container mx-auto px-6 py-8 bg-white shadow-md rounded-lg">
           <div className="flex justify-between items-center">
@@ -158,119 +159,122 @@ export default function Home() {
             )}
           </div>
         </header>
-        {/* Flashcard Sets Section */}
-        <div className="flex justify-between items-center mb-6 mt-8">
-          <h2 className="text-2xl font-semibold text-gray-800">Your Flashcard Sets</h2>
-          <Link
-            href="/create-set"
-            className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
-          >
-            <FaPlus className="mr-2" />
-            Create New Set
-          </Link>
-        </div>
 
-        {/* Search Bar */}
-        <div className="mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search your sets"
-              className="w-full pl-12 pr-4 py-3 border rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          </div>
-        </div>
-
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="text-center py-10">
-            <p className="text-xl text-gray-600">Loading flashcard sets...</p>
-          </div>
-        ) : (
+        {/* Only show this section if user is logged in */}
+        {user && (
           <>
-            {/* Your Flashcard Sets */}
-            <section>
-              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Flashcard Sets</h2>
-              {filteredFlashcardSets.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredFlashcardSets.map((set) => (
-                    <div
-                      key={set._id}
-                      className="relative border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white"
-                    >
-                      {/* Share button moved to the top-right */}
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleShare(set._id);
-                        }}
-                        className="absolute top-3 right-3 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
-                        title="Share Set"
-                      >
-                        <FaShare size={16} />
-                      </button>
+            {/* Flashcard Sets Section */}
+            <div className="flex justify-between items-center mb-6 mt-8">
+              <h2 className="text-2xl font-semibold text-gray-800">Your Flashcard Sets</h2>
+              <Link
+                href="/create-set"
+                className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
+              >
+                <FaPlus className="mr-2" />
+                Create New Set
+              </Link>
+            </div>
 
-                      {/* Card content */}
-                      <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
-                      <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
-                      <p className="text-gray-600 mb-3">{set.description}</p>
+            {/* Search Bar */}
+            <div className="mb-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search your sets"
+                  className="w-full pl-12 pr-4 py-3 border rounded-lg focus:border-blue-500 focus:ring focus:ring-blue-200 transition"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
 
-                      {/* Card details */}
-                      <div className="flex justify-between items-center text-sm text-gray-400">
-                        <span>{set.cardCount} cards</span>
-                        <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
-                      </div>
+            {/* Loading State */}
+            {isLoading ? (
+              <div className="text-center py-10">
+                <p className="text-xl text-gray-600">Loading flashcard sets...</p>
+              </div>
+            ) : (
+              <>
+                {/* Your Flashcard Sets */}
+                <section>
+                  <h2 className="text-2xl font-semibold mb-4 text-gray-800">Your Flashcard Sets</h2>
+                  {filteredFlashcardSets.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredFlashcardSets.map((set) => (
+                        <div
+                          key={set._id}
+                          className="relative border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white"
+                        >
+                          {/* Share button moved to the top-right */}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleShare(set._id);
+                            }}
+                            className="absolute top-3 right-3 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full shadow transition duration-300 ease-in-out"
+                            title="Share Set"
+                          >
+                            <FaShare size={16} />
+                          </button>
 
-                      {/* Replace the "View Set" with the share button */}
-                      <div className="mt-3 text-right">
-                        <Link href={`/flashcard-set/${set._id}`} className="text-blue-500 hover:text-blue-700">
-                          View Set
-                        </Link>
-                      </div>
+                          {/* Card content */}
+                          <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
+                          <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
+                          <p className="text-gray-600 mb-3">{set.description}</p>
 
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-10 bg-white rounded-md shadow-sm">
-                  <p className="text-lg text-gray-700">No flashcard sets found. Create your first set!</p>
-                </div>
-              )}
-            </section>
+                          {/* Card details */}
+                          <div className="flex justify-between items-center text-sm text-gray-400">
+                            <span>{set.cardCount} cards</span>
+                            <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                          </div>
 
-
-            {/* Public Flashcard Sets */}
-            <section className="mt-10">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-800">Public Flashcard Sets</h2>
-              {filteredPublicFlashcardSets.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredPublicFlashcardSets.map((set) => (
-                    <Link key={set._id} href={`/flashcard-set/${set._id}`}>
-                      <div className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
-                        <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
-                        <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
-                        <p className="text-gray-600 mb-3">{set.description}</p>
-                        <div className="flex justify-between items-center text-sm text-gray-400">
-                          <span>{set.cardCount} cards</span>
-                          <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                          {/* Replace the "View Set" with the share button */}
+                          <div className="mt-3 text-right">
+                            <Link href={`/flashcard-set/${set._id}`} className="text-blue-500 hover:text-blue-700">
+                              View Set
+                            </Link>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-10 bg-white rounded-md shadow-sm">
-                  <p className="text-lg text-gray-700">No public flashcard sets found.</p>
-                </div>
-              )}
-            </section>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10 bg-white rounded-md shadow-sm">
+                      <p className="text-lg text-gray-700">No flashcard sets found. Create your first set!</p>
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
           </>
         )}
+
+        {/* Public Flashcard Sets */}
+        <section className="mt-10">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Public Flashcard Sets</h2>
+          {filteredPublicFlashcardSets.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPublicFlashcardSets.map((set) => (
+                <Link key={set._id} href={`/flashcard-set/${set._id}`}>
+                  <div className="border rounded-lg p-5 hover:shadow-lg transition-shadow bg-white">
+                    <h3 className="text-xl font-semibold mb-1 text-blue-600">{set.title}</h3>
+                    <p className="text-gray-500 mb-2">Created by: {set.createdBy.username}</p>
+                    <p className="text-gray-600 mb-3">{set.description}</p>
+                    <div className="flex justify-between items-center text-sm text-gray-400">
+                      <span>{set.cardCount} cards</span>
+                      <span>Last updated: {new Date(set.updatedAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-10 bg-white rounded-md shadow-sm">
+              <p className="text-lg text-gray-700">No public flashcard sets found.</p>
+            </div>
+          )}
+        </section>
       </div>
     </div>
-
   );
 }
