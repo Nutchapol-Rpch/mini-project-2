@@ -2,7 +2,53 @@
 
 ## Project Overview
 
-Budzdy is an interactive web application designed to help users create, study, and master flashcards. This project was developed as part of a term project to demonstrate proficiency in modern web development technologies and practices.
+Budzdy is an interactive web application designed to help users create, study, and master flashcards which will help them to learn and memorize new information. This project was developed as part of a term project to demonstrate proficiency in modern web development technologies and practices.
+
+## Screenshots
+
+### home page no login
+
+![home page no login](./img/home_page_nologin.png)
+
+### home page login
+
+![home page login](./img/home_page.png)
+
+### login page
+
+![login page](./img/login_page.png)
+
+### register page
+
+![register page](./img/register_page.png)
+
+### flashcard set page
+
+![flashcard set page](./img/flashcard_set_page.png)  
+
+### edit profile page
+
+![edit profile page](./img/edit_profile_page.png)  
+
+### create flashcard set page
+
+![create flashcard set page](./img/create_page.png)  
+
+### Flashcard set page
+
+![Flashcard set page](./img/flashcardset_page.png)  
+
+### edit flashcard set page
+
+![edit flashcard set page](./img/edit_page.png)  
+
+### Practice mode
+
+![Practice mode](./img/practice_page.png)  
+
+### Quiz mode
+
+![Quiz mode](./img/quiz_page.png)  
 
 ## Features
 
