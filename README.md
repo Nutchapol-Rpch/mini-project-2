@@ -5,6 +5,7 @@
 Budzdy is an interactive web application designed to help users create, study, and master flashcards which will help them to learn and memorize new information. This project was developed as part of a term project to demonstrate proficiency in modern web development technologies and practices.
 
 Youtube Video: [Budzdy](https://www.youtube.com/watch?v=iGq_3xEFq9w)
+Budzdy Website: [Budzdy](https://mini-project-2-nu.vercel.app/)
 
 ## Screenshots
 
