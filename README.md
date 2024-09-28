@@ -22,10 +22,6 @@ Budzdy is an interactive web application designed to help users create, study, a
 
 ![register page](./img/register_page.png)
 
-### flashcard set page
-
-![flashcard set page](./img/flashcard_set_page.png)  
-
 ### edit profile page
 
 ![edit profile page](./img/edit_profile_page.png)  
@@ -36,7 +32,7 @@ Budzdy is an interactive web application designed to help users create, study, a
 
 ### Flashcard set page
 
-![Flashcard set page](./img/flashcardset_page.png)  
+![Flashcard set page](./img/Flashcardset_page.png)  
 
 ### edit flashcard set page
 
