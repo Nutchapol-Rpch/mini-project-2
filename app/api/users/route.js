@@ -6,6 +6,7 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 import cloudinary from '@/lib/cloudinary';
 import { Readable } from 'stream';
+import FlashcardSet from '@/models/FlashcardSet';
 
 // Login route (Read user data model)
 export async function POST(request) {
