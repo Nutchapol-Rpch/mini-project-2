@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import FlashcardSet from '@/models/FlashcardSet';
-import Card from '@/models/Card';
-import User from '@/models/User';
 
 // Read FlashcardSet data model
 export async function GET(request) {
@@ -57,9 +55,6 @@ export async function POST(request) {
       cards: [], // Initialize with an empty array
     });
     const savedSet = await newFlashcardSet.save();
-
-    // Remove the card creation logic from here
-    // as we're now handling it separately in the client-side code
 
     return NextResponse.json(savedSet, { status: 201 });
   } catch (error) {

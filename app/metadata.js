@@ -1,4 +1,4 @@
 export const metadata = {
-  title: "FlashLearn",
+  title: "Budzdy",
   description: "Create, study, and master your flashcards",
 };

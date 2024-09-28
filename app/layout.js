@@ -1,11 +1,9 @@
 "use client";
 
 import { UserProvider } from './context/UserContext';
-import { useEffect, useState } from 'react';
 import localFont from "next/font/local";
 import Link from 'next/link';
 import "./globals.css";
-import { metadata } from './metadata';
 import UserNav from '../components/UserNav';
 
 const geistSans = localFont({
@@ -18,12 +16,6 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
-
-// Remove or move the metadata export to a separate file
-// export const metadata = {
-//   title: "FlashLearn",
-//   description: "Create, study, and master your flashcards",
-// };
 
 export default function RootLayout({ children }) {
   return (
